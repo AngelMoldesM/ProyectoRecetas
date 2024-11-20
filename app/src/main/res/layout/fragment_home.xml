@@ -224,7 +224,7 @@
 
     <!--Mirar como implementar carrousel-->
     <!--<androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_popular"
+        android:id="@+id/seccion_popular"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="15dp"
