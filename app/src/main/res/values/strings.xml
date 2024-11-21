@@ -11,4 +11,5 @@
     <string name="Plato_principal">Plato Principal</string>
     <string name="Bebidas">Bebidas</string>
     <string name="Postres">Postres</string>
+    <string name="nombre_receta">Receta de prueba</string>
 </resources>
