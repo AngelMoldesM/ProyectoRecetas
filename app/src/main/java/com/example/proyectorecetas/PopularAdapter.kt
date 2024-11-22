@@ -23,7 +23,6 @@ class RecipeAdapter(
                 .load(recipe.img)
                 .into(binding.popularImg)
 
-            // Click listener
             binding.root.setOnClickListener { onItemClick(recipe) }
         }
     }

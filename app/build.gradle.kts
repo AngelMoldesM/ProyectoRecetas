@@ -39,7 +39,9 @@ android {
 }
 
 dependencies {
+    implementation ("androidx.recyclerview:recyclerview:1.2.0")
     implementation("com.google.android.material:material:1.10.0")
+    implementation(libs.androidx.room.common)
     var room_version = "2.6.0"
 
     implementation("androidx.room:room-runtime:$room_version")
