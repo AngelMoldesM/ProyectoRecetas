@@ -8,8 +8,8 @@
     <string name="categorias">Categorias</string>
     <string name="Recetas_populares">Recetas populares</string>
     <string name="Ensalada">Ensalada</string>
-    <string name="Plato_principal">Plato Principal</string>
-    <string name="Bebidas">Bebidas</string>
+    <string name="Plato_principal">Carnes</string>
+    <string name="Bebidas">Zumos</string>
     <string name="Postres">Postres</string>
     <string name="nombre_receta">Receta de prueba</string>
 </resources>

@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:foreground="?android:attr/selectableItemBackground"
             android:scaleType="centerCrop"
-            android:src="@drawable/pizza_sample" />
+            android:src="@drawable/macarrones" />
 
         <ImageView
             android:id="@+id/img_gradient"
