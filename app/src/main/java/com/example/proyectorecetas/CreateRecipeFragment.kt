@@ -19,7 +19,7 @@ class CreateRecipeFragment : Fragment() {
     private var selectedCategory: String = "Ensaladas"
 
     // Ruta de la imagen predeterminada
-    private val defaultImagePath = "default_image.jpg" // Nombre del archivo en assets
+    private val defaultImagePath = "@drawable/food"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
