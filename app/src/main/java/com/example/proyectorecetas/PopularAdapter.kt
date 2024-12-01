@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.proyectorecetas.databinding.RecetasPopularBinding
 
-
 class RecipeAdapter(
     private val recipeList: List<Recipe>,
     private val onItemClick: (Recipe) -> Unit
@@ -23,6 +22,7 @@ class RecipeAdapter(
                 .load(recipe.img)
                 .into(binding.popularImg)
 
+            // Hacer clic en el item para ejecutar la acción
             binding.root.setOnClickListener { onItemClick(recipe) }
         }
     }

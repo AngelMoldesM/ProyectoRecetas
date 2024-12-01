@@ -39,9 +39,12 @@ android {
 }
 
 dependencies {
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation("androidx.fragment:fragment-ktx:1.8.3")
     implementation ("androidx.recyclerview:recyclerview:1.2.0")
     implementation("com.google.android.material:material:1.10.0")
     implementation(libs.androidx.room.common)
+    implementation(libs.androidx.navigation.ui.ktx)
     var room_version = "2.6.0"
 
     implementation("androidx.room:room-runtime:$room_version")

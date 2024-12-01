@@ -7,15 +7,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.proyectorecetas.databinding.FragmentCategoriaBinding
-import com.example.proyectorecetas.databinding.FragmentHomeBinding
+import com.example.proyectorecetas.databinding.CategoriaBinding
 
 class CategoryAdapter(var dataList: ArrayList<Recipe>, var context: Context) :
     RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
 
-    inner class ViewHolder(var binding: FragmentCategoriaBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ViewHolder(var binding: CategoriaBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        var binding = FragmentCategoriaBinding.inflate(LayoutInflater.from(context), parent, false)
+        var binding = CategoriaBinding.inflate(LayoutInflater.from(context), parent, false)
         return ViewHolder(binding)
     }
 

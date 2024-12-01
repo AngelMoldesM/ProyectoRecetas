@@ -2,14 +2,21 @@
     <string name="app_name">ProyectoRecetas</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="HomeQuestion">Que te gustaría preparar hoy?</string>
+    <string name="HomeQuestion">¿Qué te gustaría preparar hoy?</string>
     <string name="HomeHi">Hola, Ángel!</string>
     <string name="buscar_receta">Buscar receta</string>
     <string name="categorias">Categorias</string>
     <string name="Recetas_populares">Recetas populares</string>
-    <string name="Ensalada">Ensalada</string>
+    <string name="Ensalada">Ensaladas</string>
     <string name="Plato_principal">Carnes</string>
     <string name="Bebidas">Zumos</string>
     <string name="Postres">Postres</string>
     <string name="nombre_receta">Receta de prueba</string>
+    <string name="opciones">Opciones</string>
+    <string name="mis_recetas">Mis recetas</string>
+    <string name="inicio">Inicio</string>
+    <string name="titulo_creacion">Título</string>
+    <string name="ingredientes_creacion">Ingredientes</string>
+    <string name="descripcion_creacion">Descripción</string>
+    <string name="guardar_receta">Guardar receta</string>
 </resources>

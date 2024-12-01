@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/HomeFragment"
+        android:icon="@drawable/home"
+        android:title="@string/inicio"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/createRecipeFragment"
+        android:icon="@drawable/carrot"
+        android:title="@string/mis_recetas"
+        app:showAsAction="ifRoom"/>
+
+
+    <item
+        android:id="@+id/createdRecipesFragment"
+        android:icon="@drawable/spaguetti"
+        android:title="@string/opciones"
+        app:showAsAction="ifRoom"/>
+</menu>
