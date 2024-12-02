@@ -1,6 +1,5 @@
 package com.example.proyectorecetas
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -33,12 +32,20 @@ class CreatedRecipesFragment : Fragment() {
         // Aquí pasamos la función de onItemClick
         rvAdapter = RecipeAdapter(recipeList) { recipe ->
             // Acción cuando se hace clic en una receta
-            val intent = Intent(requireContext(), RecipeFragment::class.java)
-            intent.putExtra("img", recipe.img)
-            intent.putExtra("tittle", recipe.tittle)
-            intent.putExtra("des", recipe.des)
-            intent.putExtra("ing", recipe.ing)
-            startActivity(intent)
+            val recipeFragment = RecipeFragment().apply {
+                arguments = Bundle().apply {
+                    putString("img", recipe.img)
+                    putString("tittle", recipe.tittle)
+                    putString("des", recipe.des)
+                    putString("ing", recipe.ing)
+                }
+            }
+
+            // Realiza la transacción del fragmento
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.nav_host_fragment, recipeFragment)
+                .addToBackStack(null) //
+                .commit()
         }
 
         // Configuración del RecyclerView
@@ -60,6 +67,8 @@ class CreatedRecipesFragment : Fragment() {
         recipeList.clear()
         recipeList.addAll(recipes)
         rvAdapter.notifyDataSetChanged()
+
+        db.close() // Cerrar la base de datos después de la consulta
     }
 
     override fun onDestroyView() {

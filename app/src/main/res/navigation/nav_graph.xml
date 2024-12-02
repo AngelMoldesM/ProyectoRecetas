@@ -17,5 +17,34 @@
     <fragment
         android:id="@+id/createdRecipesFragment"
         android:name="com.example.proyectorecetas.CreatedRecipesFragment"
-        android:label="CreatedRecipesFragment" />
+        android:label="CreatedRecipesFragment" >
+        <action
+            android:id="@+id/action_createdRecipesFragment_to_recipeFragment"
+            app:destination="@id/recipeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/recipeFragment"
+        android:name="com.example.proyectorecetas.RecipeFragment"
+        android:label="fragment_recipe"
+        tools:layout="@layout/fragment_receta">
+
+        <!-- Definir argumentos aquí si es necesario -->
+        <argument
+            android:name="img"
+            app:argType="string" />
+        <argument
+            android:name="tittle"
+            app:argType="string" />
+        <argument
+            android:name="des"
+            app:argType="string" />
+        <argument
+            android:name="ing"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.example.proyectorecetas.CategoryFragment"
+        android:label="fragment_categoria"
+        tools:layout="@layout/fragment_categoria" />
 </navigation>

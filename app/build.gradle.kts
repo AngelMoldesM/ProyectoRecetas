@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-
+    id("kotlin-kapt")
 }
 
 android {
@@ -50,7 +50,7 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.navigation.fragment)
     var room_version = "2.6.0"
-
+    kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
     implementation ("com.github.bumptech.glide:glide:4.16.0")

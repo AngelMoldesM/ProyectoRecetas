@@ -1,16 +1,15 @@
 package com.example.proyectorecetas
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.room.Room
 import com.example.proyectorecetas.databinding.FragmentCreateRecipeBinding
-import java.io.InputStream
 
 class CreateRecipeFragment : Fragment() {
 
@@ -18,8 +17,8 @@ class CreateRecipeFragment : Fragment() {
     private val binding get() = _binding!!
     private var selectedCategory: String = "Ensaladas"
 
-    // Ruta de la imagen predeterminada
-    private val defaultImagePath = "@drawable/food"
+    // Recurso de la imagen predeterminada en drawable
+    private val defaultImageResId = R.drawable.food
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,8 +31,8 @@ class CreateRecipeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Cargar imagen predeterminada desde assets
-        loadImageFromAssets()
+        // Cargar imagen predeterminada desde drawable
+        loadImageFromDrawable()
 
         // Configurar RadioButtonGroup para la categoría
         binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
@@ -51,14 +50,12 @@ class CreateRecipeFragment : Fragment() {
             saveRecipe()
         }
     }
-
-    // Función para cargar la imagen predeterminada desde assets
-    private fun loadImageFromAssets() {
+    //Cambiar por URL que funcione!!!!
+    // Función para cargar la imagen predeterminada desde drawable
+    private fun loadImageFromDrawable() {
         try {
-            val assetManager = requireContext().assets
-            val inputStream: InputStream = assetManager.open(defaultImagePath)
-            val bitmap: Bitmap = BitmapFactory.decodeStream(inputStream)
-            binding.imgRecipe.setImageBitmap(bitmap) // Asegúrate de tener un ImageView con id imgRecipe
+            val drawable: Drawable? = ContextCompat.getDrawable(requireContext(), defaultImageResId)
+            binding.imgRecipe.setImageDrawable(drawable) // Asegúrate de tener un ImageView con id imgRecipe
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -71,9 +68,9 @@ class CreateRecipeFragment : Fragment() {
         val ingredients = binding.etIngredients.text.toString()
 
         if (title.isNotBlank() && description.isNotBlank() && ingredients.isNotBlank()) {
-            // Usamos la imagen predeterminada desde assets
+            // Usamos la imagen de drawable al guardar la receta
             val newRecipe = Recipe(
-                img = defaultImagePath, // Usamos la ruta de la imagen en assets
+                img = defaultImageResId.toString(), // Usamos el id del drawable
                 tittle = title,
                 des = description,
                 ing = ingredients,
