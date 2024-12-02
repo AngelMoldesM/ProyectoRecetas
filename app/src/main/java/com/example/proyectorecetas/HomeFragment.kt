@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.proyectorecetas.databinding.FragmentHomeBinding
 
@@ -25,7 +26,38 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.salad.setOnClickListener {
+            val bundle = Bundle().apply {
+                putString("TITTLE", "Salad")
+                putString("CATEGORY", "Salad")
+            }
+            // Navegar a CategoryFragment
+            findNavController().navigate(R.id.action_homeFragment_to_categoryFragment, bundle)
+        }
 
+        binding.mainDish.setOnClickListener {
+            val bundle = Bundle().apply {
+                putString("TITTLE", "Main Dish")
+                putString("CATEGORY", "Dish")
+            }
+            findNavController().navigate(R.id.action_homeFragment_to_categoryFragment, bundle)
+        }
+
+        binding.drinks.setOnClickListener {
+            val bundle = Bundle().apply {
+                putString("TITTLE", "Drinks")
+                putString("CATEGORY", "Drinks")
+            }
+            findNavController().navigate(R.id.action_homeFragment_to_categoryFragment, bundle)
+        }
+
+        binding.desserts.setOnClickListener {
+            val bundle = Bundle().apply {
+                putString("TITTLE", "Desserts")
+                putString("CATEGORY", "Desserts")
+            }
+            findNavController().navigate(R.id.action_homeFragment_to_categoryFragment, bundle)
+        }
 
 
         // Configurar el RecyclerView con orientación horizontal

@@ -9,7 +9,14 @@
         android:id="@+id/homeFragment"
         android:name="com.example.proyectorecetas.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_categoryFragment"
+            app:destination="@id/categoryFragment" />
+        <action
+            android:id="@+id/action_homeFragment_self"
+            app:destination="@id/homeFragment" />
+    </fragment>
     <fragment
         android:id="@+id/createRecipeFragment"
         android:name="com.example.proyectorecetas.CreateRecipeFragment"
@@ -46,5 +53,15 @@
         android:id="@+id/categoryFragment"
         android:name="com.example.proyectorecetas.CategoryFragment"
         android:label="fragment_categoria"
-        tools:layout="@layout/fragment_categoria" />
+        tools:layout="@layout/fragment_categoria" >
+        <argument
+            android:name="tittle"
+            app:argType="string" />
+        <argument
+            android:name="category"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_categoryFragment_to_recipeFragment"
+            app:destination="@id/recipeFragment" />
+    </fragment>
 </navigation>

@@ -30,14 +30,14 @@ class CategoryFragment : Fragment() {
 
         // Configurar el título
         val title = arguments?.getString("TITTLE")
-        activity?.title = title
+        binding.tittle.text = title ?: "Sin título"
 
         setupRecyclerView()
 
-      /*  // Configuración del botón de "volver"
+        // Configuración del botón de "volver"
         binding.goBackHome.setOnClickListener {
             activity?.onBackPressed() // Regresar a la actividad anterior
-        }*/
+        }
     }
 
     private fun setupRecyclerView() {
@@ -55,7 +55,7 @@ class CategoryFragment : Fragment() {
             .build()
 
         val daoObject = db.getDao()
-        val recipes = daoObject.getAll()
+        val recipes = daoObject.getAllRecipes()
 
         for (i in recipes!!.indices) {
             if (recipes[i]!!.category.contains(arguments?.getString("CATEGORY")!!)) {

@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.room.Room
+import com.bumptech.glide.Glide
 import com.example.proyectorecetas.databinding.FragmentCreateRecipeBinding
 
 class CreateRecipeFragment : Fragment() {
@@ -17,8 +18,8 @@ class CreateRecipeFragment : Fragment() {
     private val binding get() = _binding!!
     private var selectedCategory: String = "Ensaladas"
 
-    // Recurso de la imagen predeterminada en drawable
-    private val defaultImageResId = R.drawable.food
+    // URL de la imagen predeterminada
+    private val defaultImageUrl = "https://hips.hearstapps.com/hmg-prod/images/elote-secondary-6464fa8a21969.jpg?crop=1xw:1xh;center,top&resize=980:*"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,8 +32,7 @@ class CreateRecipeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Cargar imagen predeterminada desde drawable
-        loadImageFromDrawable()
+        loadImageFromUrl()
 
         // Configurar RadioButtonGroup para la categoría
         binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
@@ -50,12 +50,15 @@ class CreateRecipeFragment : Fragment() {
             saveRecipe()
         }
     }
-    //Cambiar por URL que funcione!!!!
-    // Función para cargar la imagen predeterminada desde drawable
-    private fun loadImageFromDrawable() {
+
+    // Función para cargar la imagen desde una URL usando Glide
+    private fun loadImageFromUrl() {
         try {
-            val drawable: Drawable? = ContextCompat.getDrawable(requireContext(), defaultImageResId)
-            binding.imgRecipe.setImageDrawable(drawable) // Asegúrate de tener un ImageView con id imgRecipe
+            Glide.with(requireContext())
+                .load(defaultImageUrl)
+                .placeholder(R.drawable.macarrones)
+                .error(R.drawable.food)
+                .into(binding.imgRecipe)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -66,14 +69,17 @@ class CreateRecipeFragment : Fragment() {
         val title = binding.etTitle.text.toString()
         val description = binding.etDescription.text.toString()
         val ingredients = binding.etIngredients.text.toString()
+        val time = binding.etTime.text.toString()
 
-        if (title.isNotBlank() && description.isNotBlank() && ingredients.isNotBlank()) {
-            // Usamos la imagen de drawable al guardar la receta
+        if (title.isNotBlank() && description.isNotBlank() && ingredients.isNotBlank() && time.isNotBlank()) {
+
+            val combinedIngredients = "$time\n$ingredients"
+
             val newRecipe = Recipe(
-                img = defaultImageResId.toString(), // Usamos el id del drawable
+                img = defaultImageUrl,
                 tittle = title,
                 des = description,
-                ing = ingredients,
+                ing = combinedIngredients,
                 category = selectedCategory
             )
 
@@ -91,6 +97,7 @@ class CreateRecipeFragment : Fragment() {
             Toast.makeText(requireContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

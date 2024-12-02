@@ -8,9 +8,6 @@ import androidx.room.Query
 interface Dao {
 
     @Query("SELECT * FROM recipe")
-    fun getAll(): List<Recipe?>?
-
-    @Query("SELECT * FROM recipe")
     fun getAllRecipes(): List<Recipe>
 
     @Insert

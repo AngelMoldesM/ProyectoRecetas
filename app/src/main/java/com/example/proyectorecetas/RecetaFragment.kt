@@ -45,11 +45,11 @@ class RecipeFragment : Fragment() {
 
         // Añadir ingredientes a la vista
         ingredients?.let {
+            var ingredientText = ""
             for (i in 1 until it.size) {
-                binding.ingData.text = """${binding.ingData.text} 🟢 ${it[i]}
-                    
-                """.trimIndent()
+                ingredientText += "🟢 ${it[i]}\n"
             }
+            binding.ingData.text = ingredientText
         }
 
         // Configurar botones de paso e ingredientes

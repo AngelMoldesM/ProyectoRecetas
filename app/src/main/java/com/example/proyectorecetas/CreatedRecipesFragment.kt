@@ -5,10 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.example.proyectorecetas.databinding.FragmentCreatedRecipesBinding
-import com.example.proyectorecetas.RecipeFragment
 
 class CreatedRecipesFragment : Fragment() {
 
@@ -29,23 +29,20 @@ class CreatedRecipesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recipeList = ArrayList()
+        val navController = findNavController()
+
         // Aquí pasamos la función de onItemClick
         rvAdapter = RecipeAdapter(recipeList) { recipe ->
             // Acción cuando se hace clic en una receta
-            val recipeFragment = RecipeFragment().apply {
-                arguments = Bundle().apply {
-                    putString("img", recipe.img)
-                    putString("tittle", recipe.tittle)
-                    putString("des", recipe.des)
-                    putString("ing", recipe.ing)
-                }
+            val args = Bundle().apply {
+                putString("img", recipe.img)
+                putString("tittle", recipe.tittle)
+                putString("des", recipe.des)
+                putString("ing", recipe.ing)
             }
 
-            // Realiza la transacción del fragmento
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.nav_host_fragment, recipeFragment)
-                .addToBackStack(null) //
-                .commit()
+            // Usar NavController para navegar a RecipeFragment
+            navController.navigate(R.id.action_createdRecipesFragment_to_recipeFragment, args)
         }
 
         // Configuración del RecyclerView
