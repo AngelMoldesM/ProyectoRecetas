@@ -11,16 +11,6 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
-        android:id="@+id/categoryFragment"
-        android:name="com.example.proyectorecetas.CategoryFragment"
-        android:label="fragment_categoria"
-        tools:layout="@layout/fragment_categoria" />
-    <fragment
-        android:id="@+id/recipeFragment2"
-        android:name="com.example.proyectorecetas.RecipeFragment"
-        android:label="fragment_receta"
-        tools:layout="@layout/fragment_receta" />
-    <fragment
         android:id="@+id/createRecipeFragment"
         android:name="com.example.proyectorecetas.CreateRecipeFragment"
         android:label="CreateRecipeFragment" />

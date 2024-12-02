@@ -29,10 +29,10 @@ class HomeFragment : Fragment() {
 
 
         // Configurar el RecyclerView con orientación horizontal
-        binding.recyclerView.apply {
+/*        binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = recipeAdapter
-        }
+        }*/
     }
 
     override fun onDestroyView() {

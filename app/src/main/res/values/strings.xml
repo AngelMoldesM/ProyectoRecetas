@@ -12,8 +12,8 @@
     <string name="Bebidas">Zumos</string>
     <string name="Postres">Postres</string>
     <string name="nombre_receta">Receta de prueba</string>
-    <string name="opciones">Opciones</string>
-    <string name="mis_recetas">Mis recetas</string>
+    <string name="opciones">Mis recetas</string>
+    <string name="mis_recetas">Crear receta</string>
     <string name="inicio">Inicio</string>
     <string name="titulo_creacion">Título</string>
     <string name="ingredientes_creacion">Ingredientes</string>
