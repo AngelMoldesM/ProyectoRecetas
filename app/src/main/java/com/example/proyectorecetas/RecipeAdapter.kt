@@ -34,6 +34,9 @@ class RecipeAdapter(
 
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
         holder.bind(recipeList[position])
+        val params = holder.itemView.layoutParams as ViewGroup.MarginLayoutParams
+        params.setMargins(16, 16, 16, 16)  // Aplicar margen a todos los lados
+        holder.itemView.layoutParams = params
     }
 
     override fun getItemCount(): Int = recipeList.size

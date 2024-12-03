@@ -33,20 +33,23 @@ class HomeFragment : Fragment() {
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             recipeAdapter = RecipeAdapter(recipeList) { recipe ->
-                // Manejo del clic en un elemento
-                val bundle = Bundle().apply {
-                    putString("TITTLE", recipe.tittle)
-                    putString("CATEGORY", recipe.category)
+
+                val args = Bundle().apply {
+                    putString("img", recipe.img)
+                    putString("tittle", recipe.tittle)
+                    putString("des", recipe.des)
+                    putString("ing", recipe.ing)
                 }
-                findNavController().navigate(R.id.action_homeFragment_to_categoryFragment, bundle)
+
+
+                findNavController().navigate(R.id.action_homeFragment_to_recipeFragment, args)
             }
             adapter = recipeAdapter
         }
 
-        // Cargar recetas desde la base de datos
         loadRecipesFromDatabase()
 
-        // Configurar los clics de los botones
+        // Configurar los clics de los botones para navegar a las categorías
         binding.salad.setOnClickListener {
             val bundle = Bundle().apply {
                 putString("TITTLE", "Salad")
@@ -81,24 +84,27 @@ class HomeFragment : Fragment() {
     }
 
     private fun loadRecipesFromDatabase() {
-            val db = Room.databaseBuilder(
-                requireContext(),
-                AppDatabase::class.java,
-                "db_name"
-            )
-                .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
-                .createFromAsset("recipe.db")
-                .build()
+        val db = Room.databaseBuilder(
+            requireContext(),
+            AppDatabase::class.java,
+            "db_name"
+        )
+            .allowMainThreadQueries()
+            .fallbackToDestructiveMigration()
+            .createFromAsset("recipe.db")
+            .build()
 
-            val recipes = db.getDao().getPopularRecipes()
 
-            activity?.runOnUiThread {
-                recipeList.clear()
-                recipeList.addAll(recipes)
-                recipeAdapter.notifyDataSetChanged()
-            }
-            db.close()
+        val recipes = db.getDao().getPopularRecipes()
+
+        // Actualizar la lista de recetas en el RecyclerView
+        activity?.runOnUiThread {
+            recipeList.clear()
+            recipeList.addAll(recipes)
+            recipeAdapter.notifyDataSetChanged()
+        }
+
+        db.close()
     }
 
     override fun onDestroyView() {
