@@ -1,7 +1,6 @@
 package com.example.proyectorecetas
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,7 +8,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.proyectorecetas.databinding.FragmentCategoriaBinding
 import com.example.proyectorecetas.databinding.CategoriaBinding
 
 class CategoryAdapter(var dataList: ArrayList<Recipe>, var context: Context) :

@@ -34,12 +34,12 @@ class CategoryFragment : Fragment() {
 
         setupRecyclerView()
 
-        // Configuración del botón de "volver"
+        // Configuración del botón de volver
         binding.goBackHome.setOnClickListener {
-            activity?.onBackPressed() // Regresar a la actividad anterior
+            activity?.onBackPressed()
         }
     }
-
+    //Configuracion del RecyclerView
     private fun setupRecyclerView() {
         dataList = ArrayList()
         binding.rvCategory.layoutManager = LinearLayoutManager(requireContext())
@@ -69,6 +69,6 @@ class CategoryFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null // Liberar la referencia al binding
+        _binding = null
     }
 }

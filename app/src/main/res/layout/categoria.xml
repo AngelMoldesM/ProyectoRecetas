@@ -36,7 +36,7 @@
         android:fontFamily="@font/poppins_light"
         android:maxLength="40"
         android:maxLines="2"
-        android:text="Titulo prueba"
+        android:text="@string/titulo_prueba"
         android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -63,7 +63,7 @@
         android:layout_marginTop="4dp"
         android:fontFamily="@font/poppins_light"
         android:gravity="center"
-        android:text="30 minutos"
+        android:text="@string/_30_minutos"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="@+id/imageView5"
         app:layout_constraintStart_toEndOf="@+id/imageView5"
@@ -78,6 +78,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/flecha"
-        app:tint="#FF5722" />
+        app:srcCompat="@drawable/flechachula"
+        app:tint="@color/orange" />
 </androidx.constraintlayout.widget.ConstraintLayout>

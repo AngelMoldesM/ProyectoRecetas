@@ -1,13 +1,11 @@
 package com.example.proyectorecetas
 
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import com.example.proyectorecetas.databinding.FragmentRecetaBinding
 import com.bumptech.glide.Glide
@@ -16,7 +14,6 @@ class RecipeFragment : Fragment() {
 
     private var _binding: FragmentRecetaBinding? = null
     private val binding get() = _binding!!
-    private var imgCrop = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,7 +49,7 @@ class RecipeFragment : Fragment() {
             binding.ingData.text = ingredientText
         }
 
-        // Configurar botones de paso e ingredientes
+        // Configurar botones de pasos e ingredientes
         binding.step.background = null
         binding.step.setTextColor(requireContext().getColor(R.color.black))
         binding.step.setOnClickListener {
@@ -73,22 +70,6 @@ class RecipeFragment : Fragment() {
             binding.stepScroll.visibility = View.GONE
         }
 
-        // Configurar botón de pantalla completa
-        binding.fullScreen.setOnClickListener {
-            if (imgCrop) {
-                binding.itemImg.scaleType = ImageView.ScaleType.FIT_CENTER
-                Glide.with(requireContext()).load(img).into(binding.itemImg)
-                binding.fullScreen.setColorFilter(Color.BLACK)
-                binding.shade.visibility = View.GONE
-                imgCrop = !imgCrop
-            } else {
-                binding.itemImg.scaleType = ImageView.ScaleType.CENTER_CROP
-                Glide.with(requireContext()).load(img).into(binding.itemImg)
-                binding.fullScreen.setColorFilter(null)
-                binding.shade.visibility = View.VISIBLE
-                imgCrop = !imgCrop
-            }
-        }
 
         // Botón de regreso
         binding.backBtn.setOnClickListener {

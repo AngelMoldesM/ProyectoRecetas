@@ -10,7 +10,7 @@
 
     <item
         android:id="@+id/createRecipeFragment"
-        android:icon="@drawable/carrot"
+        android:icon="@drawable/chef"
         android:title="@string/mis_recetas"
         app:showAsAction="ifRoom"/>
 

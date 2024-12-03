@@ -41,7 +41,6 @@ class CreatedRecipesFragment : Fragment() {
                 putString("ing", recipe.ing)
             }
 
-            // Usar NavController para navegar a RecipeFragment
             navController.navigate(R.id.action_createdRecipesFragment_to_recipeFragment, args)
         }
 
@@ -65,7 +64,7 @@ class CreatedRecipesFragment : Fragment() {
         recipeList.addAll(recipes)
         rvAdapter.notifyDataSetChanged()
 
-        db.close() // Cerrar la base de datos después de la consulta
+        db.close()
     }
 
     override fun onDestroyView() {

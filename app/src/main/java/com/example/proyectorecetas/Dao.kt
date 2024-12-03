@@ -7,6 +7,9 @@ import androidx.room.Query
 @Dao
 interface Dao {
 
+    @Query("SELECT * FROM recipe LIMIT 5")
+    fun getPopularRecipes(): List<Recipe>
+
     @Query("SELECT * FROM recipe")
     fun getAllRecipes(): List<Recipe>
 

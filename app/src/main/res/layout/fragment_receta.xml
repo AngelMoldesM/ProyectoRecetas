@@ -42,20 +42,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/item_img" />
 
-    <ImageView
-        android:id="@+id/full_screen"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginEnd="20dp"
-        android:clickable="true"
-        android:foregroundGravity="center"
-        android:hapticFeedbackEnabled="true"
-        android:padding="4dp"
-        android:src="@drawable/full_size_ic"
-        app:layout_constraintBottom_toBottomOf="@+id/back_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/back_btn"
-        app:tint="@color/white" />
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
@@ -76,7 +62,7 @@
             android:layout_marginTop="22dp"
             android:layout_marginEnd="45dp"
             android:fontFamily="@font/poppins"
-            android:text="I am sample tittle"
+            android:text="@string/i_am_sample_tittle"
             android:textColor="@color/black"
             android:textSize="20sp" />
 
@@ -100,7 +86,7 @@
             android:layout_marginTop="3dp"
             android:layout_toEndOf="@+id/clock"
             android:gravity="center_vertical"
-            android:text="30 mins" />
+            android:text="@string/_30_minutos" />
 
         <Button
             android:id="@+id/ing"
@@ -114,7 +100,7 @@
             android:fontFamily="@font/poppins"
             android:paddingLeft="20sp"
             android:paddingRight="20sp"
-            android:text="Ingredients" />
+            android:text="@string/ingredients" />
 
         <ScrollView
             android:id="@+id/ing_scroll"
@@ -148,7 +134,7 @@
             android:fontFamily="@font/poppins"
             android:paddingLeft="20sp"
             android:paddingRight="20sp"
-            android:text="Steps" />
+            android:text="@string/steps" />
 
         <ScrollView
             android:id="@+id/step_scroll"

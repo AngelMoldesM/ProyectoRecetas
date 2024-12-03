@@ -19,4 +19,11 @@
     <string name="ingredientes_creacion">Ingredientes</string>
     <string name="descripcion_creacion">Descripción</string>
     <string name="guardar_receta">Guardar receta</string>
+    <string name="titulo_prueba">Titulo prueba</string>
+    <string name="_30_minutos">30 minutos</string>
+    <string name="salad">Ensaladas</string>
+    <string name="recetas_creadas">Recetas Creadas</string>
+    <string name="i_am_sample_tittle">Titulo de prueba</string>
+    <string name="ingredients">Ingredientes</string>
+    <string name="steps">Pasos</string>
 </resources>

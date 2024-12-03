@@ -13,7 +13,7 @@
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Recetas Creadas"
+        android:text="@string/recetas_creadas"
         android:textSize="24sp"
         android:textColor="@color/black"
         android:fontFamily="@font/poppins"
