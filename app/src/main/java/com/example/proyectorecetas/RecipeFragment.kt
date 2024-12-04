@@ -50,22 +50,13 @@ class RecipeFragment : Fragment() {
         }
 
         // Configurar botones de pasos e ingredientes
-        binding.step.background = null
-        binding.step.setTextColor(requireContext().getColor(R.color.black))
+
         binding.step.setOnClickListener {
-            binding.step.setBackgroundResource(R.drawable.btn_ing)
-            binding.step.setTextColor(requireContext().getColor(R.color.white))
-            binding.ing.setTextColor(requireContext().getColor(R.color.black))
-            binding.ing.background = null
             binding.stepScroll.visibility = View.VISIBLE
             binding.ingScroll.visibility = View.GONE
         }
 
         binding.ing.setOnClickListener {
-            binding.ing.setBackgroundResource(R.drawable.btn_ing)
-            binding.ing.setTextColor(requireContext().getColor(R.color.white))
-            binding.step.setTextColor(requireContext().getColor(R.color.black))
-            binding.step.background = null
             binding.ingScroll.visibility = View.VISIBLE
             binding.stepScroll.visibility = View.GONE
         }

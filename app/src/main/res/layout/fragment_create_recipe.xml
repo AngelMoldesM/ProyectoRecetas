@@ -23,6 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/titulo_creacion"
+            android:backgroundTint="@color/orange"
             android:layout_margin="10dp"/>
 
         <EditText
@@ -30,6 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/tiempo_necesario"
+            android:backgroundTint="@color/orange"
             android:layout_margin="10dp"/>
 
         <EditText
@@ -37,6 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/ingredientes_creacion"
+            android:backgroundTint="@color/orange"
             android:layout_margin="10dp"/>
 
         <EditText
@@ -44,6 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/descripcion_creacion"
+            android:backgroundTint="@color/orange"
             android:layout_margin="10dp"/>
 
         <!-- RadioGroup para categorías -->
@@ -80,11 +84,13 @@
         </RadioGroup>
 
         <!-- Botón de guardar -->
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnSaveRecipe"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
+            android:textColor="@color/orange"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:background="@drawable/custombutton"
             android:text="@string/guardar_receta"
             android:layout_margin="10dp"/>
 
