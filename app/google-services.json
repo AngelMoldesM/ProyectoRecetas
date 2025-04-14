@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "840570071817",
+    "project_id": "proyectorecetas-cocinapp",
+    "storage_bucket": "proyectorecetas-cocinapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:840570071817:android:d062f5ca123f9786f881d8",
+        "android_client_info": {
+          "package_name": "com.example.proyectorecetas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "840570071817-ffen5m3evjotov6gc6teqo02c552fdlu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.proyectorecetas",
+            "certificate_hash": "c50cb55acb51b8aec3eed8c7adcf60c64f347da5"
+          }
+        },
+        {
+          "client_id": "840570071817-9msrjo4b6vv1g64m2evfi0s0e3eusgfa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1VvqXabapkS-CUoA1ZmGOEqQZS4AD0XI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "840570071817-9msrjo4b6vv1g64m2evfi0s0e3eusgfa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

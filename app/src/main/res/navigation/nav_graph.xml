@@ -67,4 +67,12 @@
             android:id="@+id/action_categoryFragment_to_recipeFragment"
             app:destination="@id/recipeFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.proyectorecetas.LoginFragment"
+        android:label="LoginFragment" >
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>

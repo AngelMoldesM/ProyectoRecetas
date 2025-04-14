@@ -1,5 +1,6 @@
 package com.example.proyectorecetas
 
+import Recipe
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -7,24 +8,26 @@ import com.bumptech.glide.Glide
 import com.example.proyectorecetas.databinding.RecetasPopularBinding
 
 class RecipeAdapter(
-    private val recipeList: List<Recipe>,
+    private var recipeList: List<Recipe>,
     private val onItemClick: (Recipe) -> Unit
 ) : RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>() {
 
     inner class RecipeViewHolder(private val binding: RecetasPopularBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(recipe: Recipe) {
-            // Bind data to views
-            binding.popularTxt.text = recipe.tittle
-            binding.popularTime.text = "⌚ ${recipe.category}"
+            binding.popularTxt.text = recipe.title
+            binding.popularTime.text = "⏱ ${recipe.time} | ${recipe.category}"
 
-            // Cargar imagen usando Glide
             Glide.with(binding.popularImg.context)
-                .load(recipe.img)
+                .load(recipe.imageUrl)
                 .into(binding.popularImg)
 
-            // Hacer clic en el item para ejecutar la acción
             binding.root.setOnClickListener { onItemClick(recipe) }
         }
+    }
+
+    fun updateData(newRecipes: List<Recipe>) {
+        recipeList = newRecipes
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {

@@ -27,4 +27,5 @@
     <string name="ingredients">Ingredients</string>
     <string name="steps">Steps</string>
     <string name="tiempo_necesario">Time required</string>
+    <string name="default_web_client_id">TU_CLIENT_ID_WEB_DE_FIREBASE</string>
 </resources>

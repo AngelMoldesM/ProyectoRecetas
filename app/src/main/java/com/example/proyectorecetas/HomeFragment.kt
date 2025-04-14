@@ -1,5 +1,6 @@
 package com.example.proyectorecetas
 
+import Recipe
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,16 +8,24 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Room
 import com.example.proyectorecetas.databinding.FragmentHomeBinding
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-
     private lateinit var recipeAdapter: RecipeAdapter
-    private val recipeList = mutableListOf<Recipe>()
+    private val db = FirebaseFirestore.getInstance()
+
+    // Lista de categorías coincidentes con Firestore
+    private val categories = mapOf(
+        "salad" to "Ensaladas",
+        "mainDish" to "Carnes",
+        "drinks" to "Bebidas",
+        "desserts" to "Postres"
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,82 +38,65 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Configuración del RecyclerView
+        setupRecyclerView()
+        loadPopularRecipes()
+        setupCategoryButtons()
+    }
+
+    private fun setupRecyclerView() {
+        recipeAdapter = RecipeAdapter(emptyList()) { recipe ->
+            val args = Bundle().apply {
+                putString("id", recipe.id)
+                putString("img", recipe.imageUrl)
+                putString("tittle", recipe.title)
+                putString("des", recipe.description)
+                putString("ing", recipe.ingredients)
+                putString("time", recipe.time)
+            }
+            findNavController().navigate(R.id.action_homeFragment_to_recipeFragment, args)
+        }
+
         binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            recipeAdapter = RecipeAdapter(recipeList) { recipe ->
-
-                val args = Bundle().apply {
-                    putString("img", recipe.img)
-                    putString("tittle", recipe.tittle)
-                    putString("des", recipe.des)
-                    putString("ing", recipe.ing)
-                }
-
-
-                findNavController().navigate(R.id.action_homeFragment_to_recipeFragment, args)
-            }
+            layoutManager = LinearLayoutManager(
+                requireContext(),
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
             adapter = recipeAdapter
-        }
-
-        loadRecipesFromDatabase()
-
-        // Configurar los clics de los botones para navegar a las categorías
-        binding.salad.setOnClickListener {
-            val bundle = Bundle().apply {
-                putString("TITTLE", "Salad")
-                putString("CATEGORY", "Salad")
-            }
-            findNavController().navigate(R.id.action_homeFragment_to_categoryFragment, bundle)
-        }
-
-        binding.mainDish.setOnClickListener {
-            val bundle = Bundle().apply {
-                putString("TITTLE", "Main Dish")
-                putString("CATEGORY", "Dish")
-            }
-            findNavController().navigate(R.id.action_homeFragment_to_categoryFragment, bundle)
-        }
-
-        binding.drinks.setOnClickListener {
-            val bundle = Bundle().apply {
-                putString("TITTLE", "Drinks")
-                putString("CATEGORY", "Drinks")
-            }
-            findNavController().navigate(R.id.action_homeFragment_to_categoryFragment, bundle)
-        }
-
-        binding.desserts.setOnClickListener {
-            val bundle = Bundle().apply {
-                putString("TITTLE", "Desserts")
-                putString("CATEGORY", "Desserts")
-            }
-            findNavController().navigate(R.id.action_homeFragment_to_categoryFragment, bundle)
         }
     }
 
-    private fun loadRecipesFromDatabase() {
-        val db = Room.databaseBuilder(
-            requireContext(),
-            AppDatabase::class.java,
-            "db_name"
-        )
-            .allowMainThreadQueries()
-            .fallbackToDestructiveMigration()
-            .createFromAsset("recipe.db")
-            .build()
+    private fun loadPopularRecipes() {
+        db.collection("recipes")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .limit(10)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    // Manejar error
+                    return@addSnapshotListener
+                }
 
+                val recipes = snapshot?.documents?.mapNotNull { doc ->
+                    doc.toObject(Recipe::class.java)?.copy(id = doc.id)
+                } ?: emptyList()
 
-        val recipes = db.getDao().getPopularRecipes()
+                recipeAdapter.updateData(recipes)
+            }
+    }
 
-        // Actualizar la lista de recetas en el RecyclerView
-        activity?.runOnUiThread {
-            recipeList.clear()
-            recipeList.addAll(recipes)
-            recipeAdapter.notifyDataSetChanged()
+    private fun setupCategoryButtons() {
+        binding.salad.setOnClickListener { navigateToCategory("Ensaladas") }
+        binding.mainDish.setOnClickListener { navigateToCategory("Carnes") }
+        binding.drinks.setOnClickListener { navigateToCategory("Bebidas") }
+        binding.desserts.setOnClickListener { navigateToCategory("Postres") }
+    }
+
+    private fun navigateToCategory(category: String) {
+        val args = Bundle().apply {
+            putString("TITTLE", category)
+            putString("CATEGORY", category)
         }
-
-        db.close()
+        findNavController().navigate(R.id.action_homeFragment_to_categoryFragment, args)
     }
 
     override fun onDestroyView() {

@@ -1,23 +1,26 @@
 package com.example.proyectorecetas
 
-
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.example.proyectorecetas.databinding.FragmentCreateRecipeBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FieldValue
 
 class CreateRecipeFragment : Fragment() {
 
     private var _binding: FragmentCreateRecipeBinding? = null
     private val binding get() = _binding!!
     private var selectedCategory: String = "Ensaladas"
+    private val db = FirebaseFirestore.getInstance()
+    private val auth = FirebaseAuth.getInstance()
 
-    // URL de la imagen predeterminada
     private val defaultImageUrl = "https://hips.hearstapps.com/hmg-prod/images/elote-secondary-6464fa8a21969.jpg?crop=1xw:1xh;center,top&resize=980:*"
 
     override fun onCreateView(
@@ -33,7 +36,6 @@ class CreateRecipeFragment : Fragment() {
 
         loadImageFromUrl()
 
-        // Configurar RadioButtonGroup para la categoría
         binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
             selectedCategory = when (checkedId) {
                 R.id.radioSalads -> "Ensaladas"
@@ -44,13 +46,11 @@ class CreateRecipeFragment : Fragment() {
             }
         }
 
-        // Botón para guardar receta
         binding.btnSaveRecipe.setOnClickListener {
-            saveRecipe()
+            saveRecipeToFirestore()
         }
     }
 
-    // Función para cargar la imagen desde una URL usando Glide
     private fun loadImageFromUrl() {
         try {
             Glide.with(requireContext())
@@ -63,43 +63,56 @@ class CreateRecipeFragment : Fragment() {
         }
     }
 
-    // Función para guardar la receta en la base de datos
-    private fun saveRecipe() {
+    private fun saveRecipeToFirestore() {
+        val user = auth.currentUser
+        if (user == null) {
+            Toast.makeText(requireContext(), "Debes iniciar sesión para crear recetas", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val title = binding.etTitle.text.toString()
         val description = binding.etDescription.text.toString()
         val ingredients = binding.etIngredients.text.toString()
         val time = binding.etTime.text.toString()
 
-        if (title.isNotBlank() && description.isNotBlank() && ingredients.isNotBlank() && time.isNotBlank()) {
-
-            val combinedIngredients = "$time\n$ingredients"
-
-            val newRecipe = Recipe(
-                img = defaultImageUrl,
-                tittle = title,
-                des = description,
-                ing = combinedIngredients,
-                category = selectedCategory
-            )
-
-            // Insertar receta en la base de datos
-            val db = Room.databaseBuilder(
-                requireContext(),
-                AppDatabase::class.java,
-                "recipe.db"
-            ).allowMainThreadQueries().build()
-
-            db.getDao().insertRecipe(newRecipe)
-
-            Toast.makeText(requireContext(), "Receta guardada", Toast.LENGTH_SHORT).show()
-        } else {
+        if (title.isBlank() || description.isBlank() || ingredients.isBlank() || time.isBlank()) {
             Toast.makeText(requireContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show()
+            return
         }
+
+        val recipeData = hashMapOf(
+            "userId" to user.uid,
+            "title" to title,
+            "description" to description,
+            "ingredients" to ingredients,
+            "time" to time,
+            "category" to selectedCategory,
+            "imageUrl" to defaultImageUrl,
+            "timestamp" to FieldValue.serverTimestamp()
+        )
+
+        db.collection("recipes")
+            .add(recipeData)
+            .addOnSuccessListener {
+                Toast.makeText(requireContext(), "Receta creada exitosamente", Toast.LENGTH_SHORT).show()
+                clearForm()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(requireContext(), "Error al crear receta: ${e.message}", Toast.LENGTH_LONG).show()
+            }
     }
 
+    private fun clearForm() {
+        binding.etTitle.text.clear()
+        binding.etDescription.text.clear()
+        binding.etIngredients.text.clear()
+        binding.etTime.text.clear()
+        binding.radioGroup.check(R.id.radioSalads)
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
 }
