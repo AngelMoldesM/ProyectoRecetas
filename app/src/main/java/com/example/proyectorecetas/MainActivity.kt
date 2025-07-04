@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         // Configurar el BottomNavigationView con el NavController
-        val bottomNavigationView: BottomNavigationView = binding.bottomNavigation
+        val bottomNavigationView = binding.bottomNavigation
         NavigationUI.setupWithNavController(bottomNavigationView, navController)
 
         // Configurar el listener para los cambios de destino hacia Home

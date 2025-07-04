@@ -1,6 +1,5 @@
 package com.example.proyectorecetas
 
-import Recipe
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +21,14 @@ class RecipeAdapter(
                 .into(binding.popularImg)
 
             binding.root.setOnClickListener { onItemClick(recipe) }
+
+            /*val visibilityIcon = if (recipe.isPublic) {
+                R.drawable.ic_public // Crea este drawable
+            } else {
+                R.drawable.ic_private // Crea este drawable
+            }
+            binding.popularVisibility.setImageResource(visibilityIcon)*/
+            binding.popularVisibility.text = if (recipe.isPublic) "🌍" else "🔒"
         }
     }
 

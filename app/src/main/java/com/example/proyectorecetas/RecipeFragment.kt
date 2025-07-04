@@ -47,7 +47,9 @@ class RecipeFragment : Fragment() {
 
         // Formatear ingredientes
         val ingredientsText = args?.get("ingredients").toString()
+            .replace("\\n", "\n")
             .split("\n")
+            .filter { it.isNotBlank() }
             .joinToString("\n") { "🟢 $it" }
         binding.ingData.text = ingredientsText
 

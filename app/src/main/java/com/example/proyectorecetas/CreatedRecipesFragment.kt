@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,7 +31,6 @@ class CreatedRecipesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupRecyclerView()
         loadRecipesFromFirestore()
     }
@@ -39,31 +39,8 @@ class CreatedRecipesFragment : Fragment() {
         rvAdapter = RecipeAdapter(emptyList()) { recipe ->
             navigateToRecipeDetail(recipe)
         }
-
-        binding.rvCreatedRecipes.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = rvAdapter
-        }
-    }
-
-    private fun loadRecipesFromFirestore() {
-        val userId = auth.currentUser?.uid ?: return
-
-        db.collection("recipes")
-            .whereEqualTo("userId", userId)
-            .orderBy("timestamp", Query.Direction.DESCENDING)
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    // Manejar error
-                    return@addSnapshotListener
-                }
-
-                val recipes = snapshot?.documents?.mapNotNull { doc ->
-                    doc.toObject(Recipe::class.java)?.copy(id = doc.id)
-                } ?: emptyList()
-
-                rvAdapter.updateData(recipes)
-            }
+        binding.rvCreatedRecipes.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvCreatedRecipes.adapter = rvAdapter
     }
 
     private fun navigateToRecipeDetail(recipe: Recipe) {
@@ -75,8 +52,35 @@ class CreatedRecipesFragment : Fragment() {
             putString("ing", recipe.ingredients)
             putString("time", recipe.time)
         }
-
         findNavController().navigate(R.id.action_createdRecipesFragment_to_recipeFragment, args)
+    }
+
+    private fun loadRecipesFromFirestore() {
+        val userId = auth.currentUser?.uid ?: return
+
+        db.collection("recipes")
+            .whereEqualTo("userId", userId)
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    showError("Error al cargar recetas: ${error.message}")
+                    return@addSnapshotListener
+                }
+
+                val recipes = snapshot?.documents?.mapNotNull { doc ->
+                    try {
+                        doc.toObject(Recipe::class.java)?.copy(id = doc.id)
+                    } catch (e: Exception) {
+                        null
+                    }
+                } ?: emptyList()
+
+                rvAdapter.updateData(recipes)
+            }
+    }
+
+    private fun showError(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {

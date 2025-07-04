@@ -1,6 +1,9 @@
+package com.example.proyectorecetas
+
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentId
 
+// Error: Las propiedades no coinciden con el uso en otras clases
 data class Recipe(
     @DocumentId var id: String = "",
     var userId: String = "",
@@ -10,5 +13,6 @@ data class Recipe(
     var time: String = "",
     var category: String = "",
     var imageUrl: String = "",
-    var timestamp: Timestamp = Timestamp.now()
+    var timestamp: Timestamp = Timestamp.now(),
+    var isPublic: Boolean = true  // Añadido para visibilidad
 )

@@ -49,6 +49,9 @@ class CreateRecipeFragment : Fragment() {
         binding.btnSaveRecipe.setOnClickListener {
             saveRecipeToFirestore()
         }
+
+        // Añadir Switch para visibilidad
+        binding.switchPublic.isChecked = true
     }
 
     private fun loadImageFromUrl() {
@@ -80,6 +83,8 @@ class CreateRecipeFragment : Fragment() {
             return
         }
 
+        val isPublic = binding.switchPublic.isChecked
+
         val recipeData = hashMapOf(
             "userId" to user.uid,
             "title" to title,
@@ -88,7 +93,8 @@ class CreateRecipeFragment : Fragment() {
             "time" to time,
             "category" to selectedCategory,
             "imageUrl" to defaultImageUrl,
-            "timestamp" to FieldValue.serverTimestamp()
+            "timestamp" to FieldValue.serverTimestamp(),
+            "isPublic" to isPublic
         )
 
         db.collection("recipes")

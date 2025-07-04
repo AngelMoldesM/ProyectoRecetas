@@ -112,14 +112,18 @@
             android:padding="10sp">
 
             <TextView
-                android:id="@+id/ing_data"
+                android:id="@+id/ingData"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:lineSpacingExtra="10dp"
-                android:text=""
+                android:textSize="16sp"
+                android:padding="8dp"
+                android:scrollbars="vertical"
+                android:singleLine="false"
+                android:maxLines="1000"
+                android:verticalScrollbarPosition="right"
                 android:textColor="@color/black"
-                android:textSize="15sp" />
+                android:fontFamily="sans-serif"
+                tools:text="🟢 Ingredient 1\n🟢 Ingredient 2" />
 
         </ScrollView>
 

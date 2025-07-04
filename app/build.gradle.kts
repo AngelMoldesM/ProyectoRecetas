@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.example.proyectorecetas"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.proyectorecetas"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -36,6 +36,7 @@ android {
         jvmTarget = "11"
     }
     buildFeatures {
+        dataBinding = true
         viewBinding = true
     }
 
@@ -57,6 +58,7 @@ dependencies {
     implementation ("com.firebaseui:firebase-ui-auth:8.0.2")
     implementation ("com.google.firebase:firebase-auth:22.3.1")
     implementation ("com.google.firebase:firebase-firestore:24.11.0")
+    implementation(libs.firebase.firestore.ktx)
     var room_version = "2.6.0"
     kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-runtime:$room_version")

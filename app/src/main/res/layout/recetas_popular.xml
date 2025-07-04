@@ -52,5 +52,14 @@
             android:textColor="@color/white"
             android:textSize="11sp" />
 
+        <TextView
+            android:id="@+id/popularVisibility"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🌍"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
     </androidx.cardview.widget.CardView>
 </LinearLayout>

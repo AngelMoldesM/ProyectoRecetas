@@ -1,5 +1,6 @@
 package com.example.proyectorecetas
 
+
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.example.proyectorecetas.databinding.FragmentCategoriaBinding
+import com.google.firebase.firestore.FirebaseFirestore
 
 class CategoryFragment : Fragment() {
 
@@ -44,27 +46,27 @@ class CategoryFragment : Fragment() {
         dataList = ArrayList()
         binding.rvCategory.layoutManager = LinearLayoutManager(requireContext())
 
-        val db = Room.databaseBuilder(
-            requireContext(),
-            AppDatabase::class.java,
-            "db_name"
-        )
-            .allowMainThreadQueries()
-            .fallbackToDestructiveMigration()
-            .createFromAsset("recipe.db")
-            .build()
-
-        val daoObject = db.getDao()
-        val recipes = daoObject.getAllRecipes()
-
-        for (i in recipes!!.indices) {
-            if (recipes[i]!!.category.contains(arguments?.getString("CATEGORY")!!)) {
-                dataList.add(recipes[i]!!)
-            }
-        }
-
         rvAdapter = CategoryAdapter(dataList, requireContext())
         binding.rvCategory.adapter = rvAdapter
+
+        val category = arguments?.getString("CATEGORY") ?: ""
+        loadRecipesByCategory(category)
+    }
+
+    private fun loadRecipesByCategory(category: String) {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("recipes")
+            .whereEqualTo("category", category)
+            .whereEqualTo("isPublic", true) // Solo recetas públicas
+            .get()
+            .addOnSuccessListener { snapshot ->
+                val recipes = snapshot.documents.mapNotNull {
+                    it.toObject(Recipe::class.java)?.copy(id = it.id)
+                }
+                dataList.clear()
+                dataList.addAll(recipes)
+                rvAdapter.notifyDataSetChanged()
+            }
     }
 
     override fun onDestroyView() {

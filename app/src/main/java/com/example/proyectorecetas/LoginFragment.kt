@@ -1,6 +1,7 @@
 package com.example.proyectorecetas
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,12 +13,14 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
     private lateinit var auth: FirebaseAuth
+    private val db = FirebaseFirestore.getInstance()
 
     private val signInLauncher = registerForActivityResult(
         FirebaseAuthUIActivityResultContract()
@@ -73,16 +76,39 @@ class LoginFragment : Fragment() {
         }
     }
 
+    private fun saveUserToFirestore(username: String, email: String) {
+        val user = auth.currentUser
+        user?.let {
+            val userData = hashMapOf(
+                "userId" to user.uid,
+                "username" to username,
+                "email" to email
+            )
+
+            db.collection("users")
+                .document(user.uid)
+                .set(userData)
+                .addOnSuccessListener {
+                    Log.d("LoginFragment", "Usuario guardado en Firestore")
+                }
+                .addOnFailureListener { e ->
+                    Log.w("LoginFragment", "Error al guardar usuario", e)
+                }
+        }
+    }
+
     private fun handleEmailRegistration() {
         val email = binding.emailEditText.text.toString().trim()
         val password = binding.passwordEditText.text.toString().trim()
+        val username = binding.usernameEditText.text.toString().trim()
 
-        if (validateInput(email, password)) {
+        if (validateInput(email, password,  username)) {
             showLoading(true)
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     showLoading(false)
                     if (task.isSuccessful) {
+                        saveUserToFirestore(username, email)
                         navigateToMainApp()
                     } else {
                         showSnackbar("Error: ${task.exception?.message}")
@@ -106,7 +132,11 @@ class LoginFragment : Fragment() {
 
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
         if (result.resultCode == RESULT_OK) {
-            navigateToMainApp()
+            val user = auth.currentUser
+            user?.let {
+                // Para logins con Google, crear usuario si no existe
+                checkUserExists(user.uid, user.displayName ?: "Usuario", user.email ?: "")
+            }
         } else {
             val errorMessage = result.idpResponse?.error?.message ?: "Error desconocido"
             showSnackbar("Error en autenticación: $errorMessage")
@@ -127,8 +157,26 @@ class LoginFragment : Fragment() {
                 showSnackbar("La contraseña debe tener al menos 6 caracteres")
                 false
             }
+            username.isEmpty() -> {
+                showSnackbar("Ingresa un nombre de usuario")
+                false
+            }
+            username.length < 3 -> {
+                showSnackbar("El nombre debe tener al menos 3 caracteres")
+                false
+            }
             else -> true
         }
+    }
+
+    private fun checkUserExists(userId: String, username: String, email: String) {
+        db.collection("users").document(userId).get()
+            .addOnSuccessListener { document ->
+                if (!document.exists()) {
+                    saveUserToFirestore(username, email)
+                }
+                navigateToMainApp()
+            }
     }
 
     private fun navigateToMainApp() {
