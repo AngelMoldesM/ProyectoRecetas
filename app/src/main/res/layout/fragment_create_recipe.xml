@@ -1,108 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <!-- Contenedor LinearLayout -->
-    <LinearLayout
+    <!-- Fondo decorativo -->
+    <ImageView
+        android:id="@+id/fondo1"
+        android:layout_gravity="center"
+        android:layout_width="696dp"
+        android:layout_height="700dp"
+        android:alpha="0.2"
+        app:srcCompat="@drawable/fondo_comida2" />
+
+    <!-- ScrollView con formulario -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent">
 
-        <!-- Selector de Imagen -->
-        <ImageView
-            android:id="@+id/imgRecipe"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:src="@drawable/food" />
-
-        <!-- Campos de texto -->
-        <EditText
-            android:id="@+id/etTitle"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/titulo_creacion"
-            android:backgroundTint="@color/orange"
-            android:layout_margin="10dp"/>
+            android:orientation="vertical"
+            android:background="@android:color/transparent">
 
-        <EditText
-            android:id="@+id/etTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/tiempo_necesario"
-            android:backgroundTint="@color/orange"
-            android:layout_margin="10dp"/>
+            <!-- Contenido existente -->
+            <ImageView
+                android:id="@+id/imgRecipe"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:src="@drawable/spaguetti_header" />
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/switchPublic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Receta pública"
-            android:checked="true"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etTime"/>
+            <EditText
+                android:id="@+id/etTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/titulo_creacion"
+                android:backgroundTint="@color/orange"
+                android:layout_margin="10dp"/>
 
-        <EditText
-            android:id="@+id/etIngredients"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/ingredientes_creacion"
-            android:backgroundTint="@color/orange"
-            android:layout_margin="10dp"/>
+            <EditText
+                android:id="@+id/etTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/tiempo_necesario"
+                android:backgroundTint="@color/orange"
+                android:layout_margin="10dp"/>
 
-        <EditText
-            android:id="@+id/etDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/descripcion_creacion"
-            android:backgroundTint="@color/orange"
-            android:layout_margin="10dp"/>
-
-        <!-- RadioGroup para categorías -->
-        <RadioGroup
-            android:id="@+id/radioGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="10dp">
-
-            <RadioButton
-                android:id="@+id/radioSalads"
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchPublic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/Ensalada" />
+                android:text="Receta pública"
+                android:checked="true"
+                android:layout_margin="10dp"/>
 
-            <RadioButton
-                android:id="@+id/radioMeats"
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/etIngredients"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/Plato_principal" />
+                android:hint="@string/ingredientes_creacion"
+                android:backgroundTint="@color/orange"
+                android:layout_margin="10dp"/>
 
-            <RadioButton
-                android:id="@+id/radioDrinks"
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/etDescription"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/Bebidas" />
+                android:hint="@string/descripcion_creacion"
+                android:backgroundTint="@color/orange"
+                android:layout_margin="10dp"/>
 
-            <RadioButton
-                android:id="@+id/radioDesserts"
-                android:layout_width="wrap_content"
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/Postres" />
-        </RadioGroup>
+                android:orientation="horizontal"
+                android:layout_margin="10dp">
 
-        <!-- Botón de guardar -->
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnSaveRecipe"
-            android:layout_width="150dp"
-            android:textColor="@color/orange"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/custombutton"
-            android:text="@string/guardar_receta"
-            android:layout_margin="10dp"/>
+                <RadioButton
+                    android:id="@+id/radioSalads"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Ensalada" />
 
-    </LinearLayout>
-</ScrollView>
+                <RadioButton
+                    android:id="@+id/radioMeats"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Plato_principal" />
+
+                <RadioButton
+                    android:id="@+id/radioDrinks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Bebidas" />
+
+                <RadioButton
+                    android:id="@+id/radioDesserts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Postres" />
+            </RadioGroup>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSaveRecipe"
+                android:layout_width="150dp"
+                android:textColor="@color/orange"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/custombutton"
+                android:text="@string/guardar_receta"
+                android:layout_margin="10dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

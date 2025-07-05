@@ -61,6 +61,7 @@ class PublicRecipesFragment : Fragment() {
             putString("des", recipe.description)
             putString("ing", recipe.ingredients)
             putString("time", recipe.time)
+            putString("userId", recipe.userId)
         }
         findNavController().navigate(R.id.action_publicRecipesFragment_to_recipeFragment, args)
     }

@@ -1,9 +1,10 @@
- Que se puedan modificar recetas
- Mejorar entrada de usuarios, google vai mal
+ (Hecho)Que se puedan modificar recetas
+ Que se puedan borrar recetas
+ (Hecho)Mejorar entrada de usuarios, google vai mal
  Aumentar categorias de comidas (con un selector de categorias que los usuarios son impredecibles)
  Menu lateral con ajustes de usuario
  Barra de busqueda para recetas(implementar filtros mas adelante)
- Ajustar los parametros de busqueda para Firebase, se llega rapido al cap de operaciones de lectura
+ Ajustar los parametros de busqueda para Firebase (paginacion)
  (Hecho)Nombre de usuario
  Mejorar interfaces de usuario
  (Hecho)En el home fragment añadir el nombre de usuario "Hola, {username}"
@@ -12,3 +13,5 @@
  Sistema de valoracion de recetas
  Modo cocina
  Accesibilidad (tamaño letra, daltonismo...)
+ Añadir nombre del usuario creador de la receta
+ Marcar favoritos

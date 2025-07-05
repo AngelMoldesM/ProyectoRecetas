@@ -28,7 +28,7 @@ class RecipeAdapter(
                 R.drawable.ic_private // Crea este drawable
             }
             binding.popularVisibility.setImageResource(visibilityIcon)*/
-            binding.popularVisibility.text = if (recipe.isPublic) "🌍" else "🔒"
+            //binding.popularVisibility.text = if (recipe.isPublic) "🌍" else "🔒"
         }
     }
 

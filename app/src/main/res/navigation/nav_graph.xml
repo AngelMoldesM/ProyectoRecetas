@@ -55,6 +55,9 @@
         <argument
             android:name="ing"
             app:argType="string" />
+        <action
+            android:id="@+id/action_recipeFragment_to_createRecipeFragment"
+            app:destination="@id/createRecipeFragment" />
     </fragment>
     <fragment
         android:id="@+id/categoryFragment"

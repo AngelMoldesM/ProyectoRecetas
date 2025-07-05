@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.proyectorecetas.databinding.FragmentRecetaBinding
+import com.google.firebase.auth.FirebaseAuth
 
 class RecipeFragment : Fragment() {
 
@@ -24,6 +26,12 @@ class RecipeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val recipeId = arguments?.getString("id") ?: ""
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+        val recipeUserId = arguments?.getString("userId") ?: ""
+
+        binding.editButton.visibility = if (currentUserId == recipeUserId) View.VISIBLE else View.GONE
+
         // Recibir parámetros
         val args = arguments?.let {
             mapOf(
@@ -35,6 +43,19 @@ class RecipeFragment : Fragment() {
                 "time" to it.getString("time")
             )
         }
+
+        if (currentUserId == recipeUserId) {
+            binding.editButton.visibility = View.VISIBLE
+        } else {
+            binding.editButton.visibility = View.GONE
+        }
+
+        binding.editButton.setOnClickListener {
+            val recipeId = arguments?.getString("id") ?: ""
+            navigateToEditRecipe(recipeId)
+        }
+
+
 
         // Configurar UI
         Glide.with(requireContext())
@@ -68,6 +89,24 @@ class RecipeFragment : Fragment() {
         binding.backBtn.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
+    }
+
+/*
+    private fun navigateToRecipeDetail(recipe: Recipe) {
+        val args = Bundle().apply {
+            putString("id", recipe.id)
+            putString("userId", recipe.userId) // ¡IMPORTANTE!
+            // ... otros campos ...
+        }
+        findNavController().navigate(R.id.action_recipeFragment, args)
+    }
+*/
+
+    private fun navigateToEditRecipe(recipeId: String) {
+        val args = Bundle().apply {
+            putString("recipeId", recipeId)
+        }
+        findNavController().navigate(R.id.action_recipeFragment_to_createRecipeFragment, args)
     }
 
     override fun onDestroyView() {
