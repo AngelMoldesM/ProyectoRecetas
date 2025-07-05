@@ -22,13 +22,6 @@ class RecipeAdapter(
 
             binding.root.setOnClickListener { onItemClick(recipe) }
 
-            /*val visibilityIcon = if (recipe.isPublic) {
-                R.drawable.ic_public // Crea este drawable
-            } else {
-                R.drawable.ic_private // Crea este drawable
-            }
-            binding.popularVisibility.setImageResource(visibilityIcon)*/
-            //binding.popularVisibility.text = if (recipe.isPublic) "🌍" else "🔒"
         }
     }
 

@@ -14,5 +14,5 @@ data class Recipe(
     var category: String = "",
     var imageUrl: String = "",
     var timestamp: Timestamp = Timestamp.now(),
-    var isPublic: Boolean = true  // Añadido para visibilidad
+    var isPublic: Boolean = true
 )
