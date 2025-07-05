@@ -46,6 +46,26 @@ class HomeFragment : Fragment() {
         setupRecyclerView()
         loadPopularRecipes()
         setupCategoryButtons()
+        loadUserName()
+    }
+
+    private fun loadUserName() {
+        val user = FirebaseAuth.getInstance().currentUser
+        user?.let {
+            db.collection("users").document(user.uid).get()
+                .addOnSuccessListener { document ->
+                    val username = when {
+                        document.exists() -> document.getString("username") ?: "Chef"
+                        else -> "Chef"
+                    }
+                    binding.textView2.text = "Hola, $username"
+                }
+                .addOnFailureListener {
+                    binding.textView2.text = "Hola, Chef"
+                }
+        } ?: run {
+            binding.textView2.text = "Hola, Chef"
+        }
     }
 
     private fun setupRecyclerView() {

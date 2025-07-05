@@ -4,10 +4,11 @@
  Menu lateral con ajustes de usuario
  Barra de busqueda para recetas(implementar filtros mas adelante)
  Ajustar los parametros de busqueda para Firebase, se llega rapido al cap de operaciones de lectura
- Nombre de usuario
+ (Hecho)Nombre de usuario
  Mejorar interfaces de usuario
- En el home fragment añadir el nombre de usuario "Hola, {username}"
+ (Hecho)En el home fragment añadir el nombre de usuario "Hola, {username}"
  (Hecho?) Arreglar bottombar
  Refactorizar todos los strings(jeje)
  Sistema de valoracion de recetas
+ Modo cocina
  Accesibilidad (tamaño letra, daltonismo...)

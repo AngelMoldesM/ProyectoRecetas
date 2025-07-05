@@ -13,13 +13,14 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
-    private lateinit var auth: FirebaseAuth
+    private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
 
     private val signInLauncher = registerForActivityResult(
@@ -33,13 +34,11 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
-        auth = FirebaseAuth.getInstance()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupUI()
         checkCurrentUser()
     }
@@ -47,7 +46,10 @@ class LoginFragment : Fragment() {
     private fun setupUI() {
         binding.apply {
             loginButton.setOnClickListener { handleEmailLogin() }
-            registerButton.setOnClickListener { handleEmailRegistration() }
+            registerButton.setOnClickListener {
+                // Navegar al fragmento de registro
+                findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+            }
             googleSignInButton.setOnClickListener { launchGoogleSignIn() }
         }
     }
@@ -76,47 +78,6 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun saveUserToFirestore(username: String, email: String) {
-        val user = auth.currentUser
-        user?.let {
-            val userData = hashMapOf(
-                "userId" to user.uid,
-                "username" to username,
-                "email" to email
-            )
-
-            db.collection("users")
-                .document(user.uid)
-                .set(userData)
-                .addOnSuccessListener {
-                    Log.d("LoginFragment", "Usuario guardado en Firestore")
-                }
-                .addOnFailureListener { e ->
-                    Log.w("LoginFragment", "Error al guardar usuario", e)
-                }
-        }
-    }
-
-    private fun handleEmailRegistration() {
-        val email = binding.emailEditText.text.toString().trim()
-        val password = binding.passwordEditText.text.toString().trim()
-        val username = binding.usernameEditText.text.toString().trim()
-
-        if (validateInput(email, password,  username)) {
-            showLoading(true)
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    showLoading(false)
-                    if (task.isSuccessful) {
-                        saveUserToFirestore(username, email)
-                        navigateToMainApp()
-                    } else {
-                        showSnackbar("Error: ${task.exception?.message}")
-                    }
-                }
-        }
-    }
-
     private fun launchGoogleSignIn() {
         val providers = listOf(
             AuthUI.IdpConfig.GoogleBuilder().build()
@@ -134,13 +95,50 @@ class LoginFragment : Fragment() {
         if (result.resultCode == RESULT_OK) {
             val user = auth.currentUser
             user?.let {
-                // Para logins con Google, crear usuario si no existe
-                checkUserExists(user.uid, user.displayName ?: "Usuario", user.email ?: "")
+                // Para logins con Google, verificar si el usuario ya existe
+                checkUserExistsAndSave(it.uid, it.displayName ?: "Usuario", it.email ?: "")
             }
         } else {
             val errorMessage = result.idpResponse?.error?.message ?: "Error desconocido"
             showSnackbar("Error en autenticación: $errorMessage")
         }
+    }
+
+    private fun checkUserExistsAndSave(userId: String, username: String, email: String) {
+        val userDocRef = db.collection("users").document(userId)
+
+        userDocRef.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val document = task.result
+                if (document != null && !document.exists()) {
+                    // El usuario no existe, crear nuevo documento
+                    saveUserToFirestore(userId, username, email)
+                }
+                navigateToMainApp()
+            } else {
+                Log.e("LoginFragment", "Error al verificar usuario", task.exception)
+                navigateToMainApp()
+            }
+        }
+    }
+
+    private fun saveUserToFirestore(userId: String, username: String, email: String) {
+        val userData = hashMapOf(
+            "userId" to userId,
+            "username" to username,
+            "email" to email,
+            "createdAt" to FieldValue.serverTimestamp()
+        )
+
+        db.collection("users")
+            .document(userId)
+            .set(userData)
+            .addOnSuccessListener {
+                Log.d("LoginFragment", "Usuario guardado en Firestore")
+            }
+            .addOnFailureListener { e ->
+                Log.e("LoginFragment", "Error al guardar usuario", e)
+            }
     }
 
     private fun validateInput(email: String, password: String): Boolean {
@@ -157,26 +155,8 @@ class LoginFragment : Fragment() {
                 showSnackbar("La contraseña debe tener al menos 6 caracteres")
                 false
             }
-            username.isEmpty() -> {
-                showSnackbar("Ingresa un nombre de usuario")
-                false
-            }
-            username.length < 3 -> {
-                showSnackbar("El nombre debe tener al menos 3 caracteres")
-                false
-            }
             else -> true
         }
-    }
-
-    private fun checkUserExists(userId: String, username: String, email: String) {
-        db.collection("users").document(userId).get()
-            .addOnSuccessListener { document ->
-                if (!document.exists()) {
-                    saveUserToFirestore(username, email)
-                }
-                navigateToMainApp()
-            }
     }
 
     private fun navigateToMainApp() {
