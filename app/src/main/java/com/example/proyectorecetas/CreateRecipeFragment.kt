@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -18,6 +20,8 @@ class CreateRecipeFragment : Fragment() {
     private var _binding: FragmentCreateRecipeBinding? = null
     private val binding get() = _binding!!
     private var selectedCategory: String = "Ensaladas"
+    private val difficulties = listOf("Fácil", "Media", "Difícil")
+    private var selectedDifficulty = "Media"
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
     private var isEditMode = false
@@ -35,6 +39,8 @@ class CreateRecipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setupDifficultySpinner()
 
         // 1. Verificar si estamos editando una receta existente
         recipeId = arguments?.getString("recipeId")
@@ -84,6 +90,7 @@ class CreateRecipeFragment : Fragment() {
                             binding.etDescription.setText(it.description)
                             binding.etIngredients.setText(it.ingredients)
                             binding.etTime.setText(it.time)
+                            binding.spinnerDifficulty.setSelection(difficulties.indexOf(it.difficulty))
                             binding.switchPublic.isChecked = it.isPublic
 
                             // Cargar imagen
@@ -175,14 +182,37 @@ class CreateRecipeFragment : Fragment() {
 
         return isValid
     }
+    private fun setupDifficultySpinner() {
+        val difficultyAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            difficulties
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+
+        binding.spinnerDifficulty.adapter = difficultyAdapter
+
+        binding.spinnerDifficulty.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                selectedDifficulty = difficulties[position]
+            }
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+    }
 
     private fun createNewRecipe(userId: String) {
+        val title = binding.etTitle.text.toString().trim()
+        val normalizedTitle = title.lowercase().normalize()
+
         val recipeData = hashMapOf(
             "userId" to userId,
             "title" to binding.etTitle.text.toString().trim(),
+            "searchTitle" to normalizedTitle,
             "description" to binding.etDescription.text.toString().trim(),
             "ingredients" to binding.etIngredients.text.toString().trim(),
             "time" to binding.etTime.text.toString().trim(),
+            "difficulty" to selectedDifficulty,
             "category" to selectedCategory,
             "imageUrl" to defaultImageUrl,
             "timestamp" to FieldValue.serverTimestamp(),
@@ -209,6 +239,7 @@ class CreateRecipeFragment : Fragment() {
                 "description" to binding.etDescription.text.toString().trim(),
                 "ingredients" to binding.etIngredients.text.toString().trim(),
                 "time" to binding.etTime.text.toString().trim(),
+                "difficulty" to selectedDifficulty,
                 "category" to selectedCategory,
                 "isPublic" to binding.switchPublic.isChecked,
                 "lastUpdated" to FieldValue.serverTimestamp()
@@ -227,6 +258,14 @@ class CreateRecipeFragment : Fragment() {
         } ?: run {
             Toast.makeText(requireContext(), "Error: ID de receta no encontrado", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    // Funciones auxiliares
+    private fun String.normalize(): String {
+        return this
+            .lowercase()
+            .replace("á", "a").replace("é", "e").replace("í", "i").replace("ó", "o").replace("ú", "u")
+            .replace("ñ", "n")
     }
 
     private fun clearForm() {

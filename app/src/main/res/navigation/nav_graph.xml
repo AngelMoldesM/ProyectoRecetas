@@ -5,6 +5,10 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
 
+    <action
+        android:id="@+id/action_global_recipeFragment"
+        app:destination="@id/recipeFragment" />
+
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.proyectorecetas.HomeFragment"
@@ -23,6 +27,9 @@
             android:id="@+id/action_global_loginFragment"
             app:destination="@id/loginFragment"
             app:popUpTo="@id/nav_graph" app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_homeFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/createRecipeFragment"
@@ -105,4 +112,23 @@
             android:id="@+id/action_registerFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.proyectorecetas.SearchFragment"
+        android:label="Buscar"
+        tools:layout="@layout/fragment_search">
+
+        <argument
+            android:name="searchQuery"
+            app:argType="string"
+            android:defaultValue="" />
+
+        <action
+            android:id="@+id/action_searchFragment_to_recipeFragment"
+            app:destination="@id/recipeFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/filterBottomSheet"
+        android:name="com.example.proyectorecetas.FilterBottomSheet"
+        android:label="FilterBottomSheet" />
 </navigation>

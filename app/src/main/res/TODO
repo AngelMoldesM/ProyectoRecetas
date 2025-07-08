@@ -3,7 +3,7 @@
  (Hecho)Mejorar entrada de usuarios, google vai mal
  Aumentar categorias de comidas (con un selector de categorias que los usuarios son impredecibles)
  Menu lateral con ajustes de usuario
- Barra de busqueda para recetas(implementar filtros mas adelante)
+ (Hecho)Barra de busqueda para recetas(implementar filtros mas adelante)
  Ajustar los parametros de busqueda para Firebase (paginacion)
  (Hecho)Nombre de usuario
  Mejorar interfaces de usuario
@@ -11,7 +11,9 @@
  (Hecho?) Arreglar bottombar
  Refactorizar todos los strings(jeje)
  Sistema de valoracion de recetas
+ (Hecho)Añadir complejidad recetas
  Modo cocina
  Accesibilidad (tamaño letra, daltonismo...)
  Añadir nombre del usuario creador de la receta
  Marcar favoritos
+ Optimizar y refactorizar absolutamente todo

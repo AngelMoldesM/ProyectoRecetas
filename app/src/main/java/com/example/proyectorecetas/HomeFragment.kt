@@ -1,6 +1,7 @@
 package com.example.proyectorecetas
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,6 +39,8 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupSearchField()
+
         binding.btnLogout.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             findNavController().navigate(R.id.action_global_loginFragment)
@@ -48,6 +51,37 @@ class HomeFragment : Fragment() {
         setupCategoryButtons()
         loadUserName()
     }
+
+    private fun setupSearchField() {
+        binding.search.setOnClickListener {
+            navigateToSearchFragment("")
+        }
+
+        // Permitir escribir en el campo de búsqueda
+        binding.search.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                val query = binding.search.text.toString().trim()
+                navigateToSearchFragment(query)
+                true
+            } else {
+                false
+            }
+        }
+
+        // Icono de búsqueda
+        binding.imageView3.setOnClickListener {
+            val query = binding.search.text.toString().trim()
+            navigateToSearchFragment(query)
+        }
+    }
+
+    private fun navigateToSearchFragment(query: String) {
+        val bundle = Bundle().apply {
+            putString("searchQuery", query)
+        }
+        findNavController().navigate(R.id.action_homeFragment_to_searchFragment, bundle)
+    }
+
 
     private fun loadUserName() {
         val user = FirebaseAuth.getInstance().currentUser
@@ -77,6 +111,7 @@ class HomeFragment : Fragment() {
                 putString("des", recipe.description)
                 putString("ing", recipe.ingredients)
                 putString("time", recipe.time)
+                putString("difficulty", recipe.difficulty)
                 putString("userId", recipe.userId)
             }
             findNavController().navigate(R.id.action_homeFragment_to_recipeFragment, args)

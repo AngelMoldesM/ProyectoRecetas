@@ -15,6 +15,7 @@ class RecipeAdapter(
         fun bind(recipe: Recipe) {
             binding.popularTxt.text = recipe.title
             binding.popularTime.text = "⏱ ${recipe.time} | ${recipe.category}"
+            binding.popularDifficulty.text = "Dificultad: ${recipe.difficulty}"
 
             Glide.with(binding.popularImg.context)
                 .load(recipe.imageUrl)

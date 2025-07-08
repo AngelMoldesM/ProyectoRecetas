@@ -33,6 +33,7 @@ class RecipeFragment : Fragment() {
         val recipeId = arguments?.getString("id") ?: ""
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
         val recipeUserId = arguments?.getString("userId") ?: ""
+        binding.difficulty.text = "Dificultad: ${arguments?.getString("difficulty") ?: "Media"}"
 
         binding.fabOptions.visibility = if (currentUserId == recipeUserId) View.VISIBLE else View.GONE
 
@@ -50,7 +51,7 @@ class RecipeFragment : Fragment() {
             )
         }
 
-        if (currentUserId == recipeUserId) {
+       /* if (currentUserId == recipeUserId) {
             binding.editButton.visibility = View.VISIBLE
         } else {
             binding.editButton.visibility = View.GONE
@@ -59,7 +60,7 @@ class RecipeFragment : Fragment() {
         binding.editButton.setOnClickListener {
             val recipeId = arguments?.getString("id") ?: ""
             navigateToEditRecipe(recipeId)
-        }
+        }*/
 
 
 

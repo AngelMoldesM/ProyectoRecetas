@@ -102,15 +102,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/item_img" />
 
-    <Button
-        android:id="@+id/editButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Editar Receta"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp"/>
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
@@ -156,6 +147,17 @@
             android:layout_toEndOf="@+id/clock"
             android:gravity="center_vertical"
             android:text="@string/_30_minutos" />
+
+        <TextView
+            android:id="@+id/difficulty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="44dp"
+            android:layout_marginBottom="397dp"
+            android:text="Dificultad: Media"
+            android:textAppearance="?attr/textAppearanceBodyMedium" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/ing"
@@ -233,5 +235,7 @@
         </ScrollView>
 
     </RelativeLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
