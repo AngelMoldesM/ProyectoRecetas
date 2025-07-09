@@ -27,34 +27,32 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.google.android.material.search.SearchView
-        android:id="@+id/searchView"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:queryHint="Buscar recetas..."
-        app:searchPrefixText="@null">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:padding="8dp"/>
 
-            <LinearLayout
-                android:id="@+id/suggestionsContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone"/>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="8dp"/>
-
-        </LinearLayout>
-    </com.google.android.material.search.SearchView>
+        <TextView
+            android:id="@+id/emptyState"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="No se encontraron recetas"
+            android:visibility="gone"/>
+    </FrameLayout>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabFilters"
@@ -65,20 +63,5 @@
         android:text="Filtros"
         app:iconTint="@android:color/white"
         app:backgroundTint="@color/orange" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/emptyState"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="No se encontraron recetas"
-        android:visibility="gone"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
