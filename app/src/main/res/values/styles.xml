@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/orange</item>
+        <item name="colorPrimaryDark">@color/dark_orange</item>
+        <item name="colorAccent">@color/teal_200</item>
+    </style>
     <style name="my_Style">
         <item name="android:layout_width">90dp</item>
         <item name="android:layout_height">80dp</item>
@@ -7,4 +12,44 @@
         <item name="android:layout_marginTop">15dp</item>
         <item name="android:textColor">#F80000</item>
     </style>
+    <!-- Tamaños de texto -->
+    <style name="FontSizeSmall" parent="AppTheme">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="FontSizeMedium" parent="AppTheme">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="FontSizeLarge" parent="AppTheme">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="FontSizeXLarge" parent="AppTheme">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <!-- Alto contraste -->
+    <style name="HighContrastTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/black</item>
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorSurface">@color/black</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/light_gray</item>
+        <item name="colorControlNormal">@color/white</item>
+        <item name="colorControlActivated">@color/white</item>
+        <item name="colorControlHighlight">@color/white</item>
+
+        <!-- Asegurar contraste en botones -->
+        <item name="materialButtonStyle">@style/HighContrastButton</item>
+    </style>
+
+    <style name="HighContrastButton" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/white</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
 </resources>

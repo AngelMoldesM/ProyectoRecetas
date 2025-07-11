@@ -1,0 +1,41 @@
+<resources>
+    <!-- Opciones para tamaño de texto -->
+    <string-array name="font_size_options">
+        <item>Pequeño</item>
+        <item>Mediano</item>
+        <item>Grande</item>
+        <item>Muy grande</item>
+    </string-array>
+
+    <string-array name="font_size_values">
+        <item>small</item>
+        <item>medium</item>
+        <item>large</item>
+        <item>xlarge</item>
+    </string-array>
+
+    <!-- Opciones para modo daltónicos -->
+    <string-array name="color_blind_options">
+        <item>Ninguno</item>
+        <item>Protanopia (rojo-verde)</item>
+        <item>Deuteranopia (verde-rojo)</item>
+        <item>Tritanopia (azul-amarillo)</item>
+    </string-array>
+
+    <string-array name="color_blind_values">
+        <item>none</item>
+        <item>protanopia</item>
+        <item>deuteranopia</item>
+        <item>tritanopia</item>
+    </string-array>
+    <!-- Reply Preference -->
+    <string-array name="reply_entries">
+        <item>Reply</item>
+        <item>Reply to all</item>
+    </string-array>
+
+    <string-array name="reply_values">
+        <item>reply</item>
+        <item>reply_all</item>
+    </string-array>
+</resources>

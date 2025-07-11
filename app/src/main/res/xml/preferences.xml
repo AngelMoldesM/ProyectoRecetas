@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="Accesibilidad">
+
+        <ListPreference
+            app:key="font_size"
+            app:title="Tamaño de texto"
+            app:summary="Ajusta el tamaño del texto"
+            app:entries="@array/font_size_options"
+            app:entryValues="@array/font_size_values"
+            app:defaultValue="medium" />
+
+        <SwitchPreference
+            app:key="high_contrast"
+            app:title="Alto contraste"
+            app:summary="Mejora la legibilidad"
+            app:defaultValue="false" />
+
+        <ListPreference
+            app:key="color_blind_mode"
+            app:title="Modo para daltónicos"
+            app:summary="Ajuste para diferentes tipos de daltonismo"
+            app:entries="@array/color_blind_options"
+            app:entryValues="@array/color_blind_values"
+            app:defaultValue="none" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="General">
+
+        <SwitchPreference
+            app:key="notifications"
+            app:title="Notificaciones"
+            app:summary="Recibir notificaciones"
+            app:defaultValue="true" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

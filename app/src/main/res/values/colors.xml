@@ -9,4 +9,9 @@
     <color name="background">#F5F5F5</color>
     <color name="black_light">#1E000000</color>
     <color name="orange">#FF9800</color>
+    <color name="protanopia_primary">#FF6B8E23</color> <!-- Verde oliva -->
+    <color name="deuteranopia_primary">#FF4682B4</color> <!-- Azul acero -->
+    <color name="tritanopia_primary">#FFD2691E</color> <!-- Chocolate -->
+    <color name="dark_orange">#FF8000</color>
+    <color name="light_gray">#FFCCCCCC</color>
 </resources>

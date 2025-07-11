@@ -34,7 +34,11 @@
     <fragment
         android:id="@+id/createRecipeFragment"
         android:name="com.example.proyectorecetas.CreateRecipeFragment"
-        android:label="CreateRecipeFragment" />
+        android:label="CreateRecipeFragment" >
+        <action
+            android:id="@+id/action_createRecipeFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
     <fragment
         android:id="@+id/createdRecipesFragment"
         android:name="com.example.proyectorecetas.CreatedRecipesFragment"
@@ -42,6 +46,9 @@
         <action
             android:id="@+id/action_createdRecipesFragment_to_recipeFragment"
             app:destination="@id/recipeFragment" />
+        <action
+            android:id="@+id/action_createdRecipesFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/recipeFragment"
@@ -131,4 +138,15 @@
         android:id="@+id/filterBottomSheet"
         android:name="com.example.proyectorecetas.FilterBottomSheet"
         android:label="FilterBottomSheet" />
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.example.proyectorecetas.SettingsFragment"
+        android:label="Opciones"
+        tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/nav_favorites"
+        android:name="com.example.proyectorecetas.FavoritesFragment"
+        android:label="Favoritos"
+        tools:layout="@layout/fragment_favorites" />
 </navigation>
