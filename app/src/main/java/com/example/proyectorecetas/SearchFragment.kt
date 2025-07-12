@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +19,7 @@ class SearchFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: SearchViewModel by viewModels()
     private lateinit var adapter: SearchAdapter
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,6 +39,11 @@ class SearchFragment : Fragment() {
         setupListeners()
 
         if (initialQuery.isNotEmpty()) viewModel.searchRecipes(initialQuery)
+
+        binding.DrawerButton.setOnClickListener {
+            sharedViewModel.toggleDrawer()
+        }
+
     }
 
     private fun setupUI(initialQuery: String) {

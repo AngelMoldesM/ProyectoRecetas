@@ -8,6 +8,7 @@
     android:orientation="vertical"
     tools:context=".HomeFragment">
 
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="50dp"
@@ -15,19 +16,12 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/card_back_btn"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/menu_home" />
-
     <!--aqui un fondo viene bien, revisar-->
-
-    <Button
-        android:id="@+id/btnLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cerrar Sesión"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
 
     <ImageView
         android:id="@+id/fondo1"
@@ -124,8 +118,8 @@
             android:layout_width="match_parent"
             android:layout_height="140dp"
             android:orientation="vertical"
-            android:paddingLeft="7dp"
-            android:paddingRight="10dp">
+            android:paddingStart="7dp"
+            android:paddingEnd="10dp">
 
             <ImageView
                 android:id="@+id/salad"

@@ -52,7 +52,7 @@
                 android:id="@+id/switchPublic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Receta pública"
+                android:text="@string/public_recipe"
                 android:checked="true"
                 android:layout_margin="10dp"/>
 
@@ -76,7 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="Dificultad">
+                android:hint="@string/difficulty">
 
                 <Spinner
                     android:id="@+id/spinnerDifficulty"

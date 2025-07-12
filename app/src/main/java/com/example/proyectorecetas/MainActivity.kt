@@ -1,9 +1,9 @@
 package com.example.proyectorecetas
 
 import android.os.Bundle
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -13,7 +13,6 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import com.example.proyectorecetas.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,8 +20,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
     private val auth by lazy { FirebaseAuth.getInstance() }
-    private val db by lazy { FirebaseFirestore.getInstance() }
     private var shouldUpdateBottomNav = true
+    private lateinit var sharedViewModel: SharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         applyAccessibilitySettings()
@@ -31,11 +30,25 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Configurar Toolbar
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        //setSupportActionBar(binding.toolbar)
+
+        // Inicializar ViewModel compartido
+        sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
 
         setupNavigation()
-        loadUserData()
+
+        // Observar eventos del drawer
+        sharedViewModel.toggleDrawerEvent.observe(this) {
+            toggleDrawer()
+        }
+    }
+
+    private fun toggleDrawer() {
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            binding.drawerLayout.openDrawer(GravityCompat.START)
+        }
     }
 
     private fun setupNavigation() {
@@ -50,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         // Configurar ActionBar con NavController
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        //setupActionBarWithNavController(navController, appBarConfiguration)
 
         // Configurar NavigationView
         binding.navView.setupWithNavController(navController)
@@ -111,6 +124,21 @@ class MainActivity : AppCompatActivity() {
                 logoutUser()
                 true
             }
+            findItem(R.id.nav_home).setOnMenuItemClickListener {
+                navController.navigate(R.id.homeFragment)
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
+                true
+            }
+            findItem(R.id.nav_search).setOnMenuItemClickListener {
+                navController.navigate(R.id.searchFragment)
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
+                true
+            }
+            findItem(R.id.nav_favorites).setOnMenuItemClickListener {
+                navController.navigate(R.id.favoritesFragment)
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
+                true
+            }
         }
     }
 
@@ -132,11 +160,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadUserData() {
-        val user = auth.currentUser ?: return
-        val header = binding.navView.getHeaderView(0)
-
-    }
 
     private fun logoutUser() {
         auth.signOut()
@@ -148,6 +171,7 @@ class MainActivity : AppCompatActivity() {
         return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp()
     }
 
+    @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
     override fun onBackPressed() {
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             binding.drawerLayout.closeDrawer(GravityCompat.START)

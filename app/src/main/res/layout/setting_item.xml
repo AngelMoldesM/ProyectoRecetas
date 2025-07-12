@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/setting_value"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="Configuración"/>
+        android:text="@string/settings"/>
 
     <TextView
         android:id="@+id/setting_value"
@@ -27,9 +27,9 @@
         app:layout_constraintEnd_toStartOf="@+id/setting_switch"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="Valor"/>
+        android:text="@string/value"/>
 
-    <Switch
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/setting_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

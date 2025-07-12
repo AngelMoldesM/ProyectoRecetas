@@ -5,24 +5,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchFragment">
+    tools:context=".SearchFragment"
+    android:fitsSystemWindows="true">
+
+
+    <ImageView
+        android:id="@+id/DrawerButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/card_back_btn"
+        android:clickable="true"
+        android:elevation="8dp"
+        android:focusable="true"
+        app:layout_anchorGravity="start|top"
+        app:srcCompat="@drawable/menu_home" />
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:layout_marginTop="60dp">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:title="Buscar Recetas" />
-
+        <!-- BARRA DE BÚSQUEDA (sin Toolbar) -->
         <com.google.android.material.search.SearchBar
             android:id="@+id/searchBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Buscar recetas..."
+            android:hint="@string/search_recipes"
             app:layout_scrollFlags="scroll|enterAlways" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -50,7 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="No se encontraron recetas"
+            android:text="@string/no_recipes_found"
             android:visibility="gone"/>
     </FrameLayout>
 
@@ -60,7 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:text="Filtros"
+        android:text="@string/filters"
         app:iconTint="@android:color/white"
         app:backgroundTint="@color/orange" />
 

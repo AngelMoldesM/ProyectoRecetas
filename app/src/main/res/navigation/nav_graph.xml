@@ -143,10 +143,10 @@
         android:name="com.example.proyectorecetas.SettingsFragment"
         android:label="Opciones"
         tools:layout="@layout/fragment_settings" />
-
     <fragment
-        android:id="@+id/nav_favorites"
+        android:id="@+id/favoritesFragment"
         android:name="com.example.proyectorecetas.FavoritesFragment"
-        android:label="Favoritos"
+        android:label="fragment_favorites"
         tools:layout="@layout/fragment_favorites" />
+
 </navigation>

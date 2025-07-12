@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.proyectorecetas.databinding.FragmentHomeBinding
@@ -19,14 +20,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var recipeAdapter: RecipeAdapter
     private val db = FirebaseFirestore.getInstance()
-
-    // Lista de categorías coincidentes con Firestore
-    private val categories = mapOf(
-        "salad" to "Ensaladas",
-        "mainDish" to "Carnes",
-        "drinks" to "Bebidas",
-        "desserts" to "Postres"
-    )
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,13 +33,12 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupSearchField()
-
-        binding.btnLogout.setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
-            findNavController().navigate(R.id.action_global_loginFragment)
+        // Configurar el clic del botón del drawer
+        binding.imageView.setOnClickListener {
+            sharedViewModel.toggleDrawer()
         }
 
+        setupSearchField()
         setupRecyclerView()
         loadPopularRecipes()
         setupCategoryButtons()
@@ -92,13 +85,13 @@ class HomeFragment : Fragment() {
                         document.exists() -> document.getString("username") ?: "Chef"
                         else -> "Chef"
                     }
-                    binding.textView2.text = "Hola, $username"
+                    binding.textView2.text = getString(R.string.hello_user, username)
                 }
                 .addOnFailureListener {
-                    binding.textView2.text = "Hola, Chef"
+                    binding.textView2.text = getString(R.string.hello_chef)
                 }
         } ?: run {
-            binding.textView2.text = "Hola, Chef"
+            binding.textView2.text = getString(R.string.hello_chef)
         }
     }
 
@@ -129,8 +122,9 @@ class HomeFragment : Fragment() {
 
     private fun loadPopularRecipes() {
         db.collection("recipes")
+            .whereEqualTo("isPublic", true)
             .orderBy("timestamp", Query.Direction.DESCENDING)
-            .limit(10)
+            .limit(5)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     // Manejar error

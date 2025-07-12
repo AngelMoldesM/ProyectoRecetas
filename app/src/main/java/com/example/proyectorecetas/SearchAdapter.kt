@@ -14,34 +14,25 @@ class SearchAdapter(
     private val onLoadMore: () -> Unit
 ) : ListAdapter<Recipe, RecyclerView.ViewHolder>(RecipeDiffCallback) {
 
-    private var loadingItemVisible = false
+    // 1. Eliminar la variable de control del ítem de carga
+    // 2. Simplificar getItemCount()
+    override fun getItemCount() = super.getItemCount()
 
-    override fun getItemViewType(position: Int) = when {
-        position < super.getItemCount() -> TYPE_RECIPE
-        else -> TYPE_LOADING
-    }
-
-    override fun getItemCount() = super.getItemCount() + if (loadingItemVisible) 1 else 0
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = when (viewType) {
-        TYPE_RECIPE -> RecipeViewHolder(
-            RecetasPopularBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            ),
-            onItemClick
-        )
-        else -> LoadingViewHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_loading, parent, false)
-        )
-    }
+    // 3. Eliminar la lógica de tipos de vista
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = RecipeViewHolder(
+        RecetasPopularBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        ),
+        onItemClick
+    )
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is RecipeViewHolder) {
             getItem(position)?.let { recipe ->
                 holder.bind(recipe)
+                // 4. Mantener la carga automática si es necesario
                 if (position >= itemCount - 3) onLoadMore()
             }
         }
@@ -56,7 +47,6 @@ class SearchAdapter(
             with(binding) {
                 popularTxt.text = recipe.title
                 popularTime.text = "⏱ ${recipe.time} | ${recipe.category}"
-                popularDifficulty.text = "Dificultad: ${recipe.difficulty}"
 
                 Glide.with(root.context)
                     .load(recipe.imageUrl)
@@ -67,12 +57,7 @@ class SearchAdapter(
         }
     }
 
-    inner class LoadingViewHolder(view: View) : RecyclerView.ViewHolder(view)
-
     companion object {
-        private const val TYPE_RECIPE = 0
-        private const val TYPE_LOADING = 1
-
         private val RecipeDiffCallback = object : DiffUtil.ItemCallback<Recipe>() {
             override fun areItemsTheSame(oldItem: Recipe, newItem: Recipe) =
                 oldItem.id == newItem.id
