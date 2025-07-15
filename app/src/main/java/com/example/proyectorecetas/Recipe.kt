@@ -1,20 +1,20 @@
 package com.example.proyectorecetas
 
-import com.google.firebase.Timestamp
-import com.google.firebase.firestore.DocumentId
+import kotlinx.datetime.Instant
+import kotlinx.serialization.Serializable
 
-// Error: Las propiedades no coinciden con el uso en otras clases
+
+@Serializable
 data class Recipe(
-    @DocumentId var id: String = "",
-    var userId: String = "",
-    var title: String = "",
-    var searchTitle: String = "",
-    var description: String = "",
-    var ingredients: String = "",
-    var time: String = "",
-    var difficulty: String = "Media",
-    var category: String = "",
-    var imageUrl: String = "",
-    var timestamp: Timestamp = Timestamp.now(),
-    var isPublic: Boolean = true
+    val id: String = "",
+    val user_id: String = "",
+    val title: String = "",
+    val description: String = "",
+    val ingredients: String = "",
+    val time: String = "",
+    val difficulty: String = "Media",
+    val category: String = "",
+    val image_path: String = "",
+    val created_at: String="",
+    val is_public: Boolean = true
 )

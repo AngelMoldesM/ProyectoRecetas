@@ -38,7 +38,9 @@ class SearchFragment : Fragment() {
         setupObservers()
         setupListeners()
 
-        if (initialQuery.isNotEmpty()) viewModel.searchRecipes(initialQuery)
+        if (initialQuery.isNotEmpty()) {
+            viewModel.searchRecipes(initialQuery, emptyList(), emptyList())
+        }
 
         binding.DrawerButton.setOnClickListener {
             sharedViewModel.toggleDrawer()
@@ -99,11 +101,17 @@ class SearchFragment : Fragment() {
         binding.fabFilters.setOnClickListener { showFilterBottomSheet() }
     }
 
+
     private fun performSearch(query: String) {
         binding.searchBar.setText(query)
-        viewModel.searchRecipes(query)
+        viewModel.searchRecipes(
+            query,
+            viewModel.currentCategoryFilters,
+            viewModel.currentDifficultyFilters
+        )
         hideKeyboard()
     }
+
 
     private fun hideKeyboard() {
         val imm = requireContext().getSystemService(InputMethodManager::class.java)
@@ -112,7 +120,11 @@ class SearchFragment : Fragment() {
 
     private fun showFilterBottomSheet() {
         FilterBottomSheet { categories, difficulties ->
-            viewModel.searchRecipes(viewModel.currentQuery, categories, difficulties)
+            viewModel.searchRecipes(
+                viewModel.currentQuery,
+                categories,
+                difficulties
+            )
         }.show(parentFragmentManager, "FilterBottomSheet")
     }
 
@@ -121,13 +133,13 @@ class SearchFragment : Fragment() {
             R.id.action_global_recipeFragment,
             Bundle().apply {
                 putString("id", recipe.id)
-                putString("img", recipe.imageUrl)
+                putString("img", recipe.image_path)
                 putString("tittle", recipe.title)
                 putString("des", recipe.description)
                 putString("ing", recipe.ingredients)
                 putString("time", recipe.time)
                 putString("difficulty", recipe.difficulty)
-                putString("userId", recipe.userId)
+                putString("userId", recipe.user_id)
             }
         )
     }

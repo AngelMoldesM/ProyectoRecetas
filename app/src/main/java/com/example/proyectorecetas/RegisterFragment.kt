@@ -9,16 +9,23 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.example.proyectorecetas.databinding.FragmentRegisterBinding
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.auth.providers.builtin.Email
+import io.github.jan.supabase.postgrest.from
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.datetime.Clock
 
 class RegisterFragment : Fragment() {
 
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
-    private val auth = FirebaseAuth.getInstance()
-    private val db = FirebaseFirestore.getInstance()
+
+    private val supabase: SupabaseClient
+        get() = SupabaseManager.client
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,48 +53,60 @@ class RegisterFragment : Fragment() {
         val password = binding.passwordEditText.text.toString().trim()
         val confirmPassword = binding.confirmPasswordEditText.text.toString().trim()
 
-        if (validateInput(username, email, password, confirmPassword)) {
-            showLoading(true)
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        saveUserToFirestore(username, email)
-                    } else {
+        if (!validateInput(username, email, password, confirmPassword)) return
+
+        showLoading(true)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                supabase.auth.signUpWith(Email) {
+                    this.email = email
+                    this.password = password
+                }
+
+                val currentUser = supabase.auth.currentUserOrNull()
+
+                if (currentUser != null) {
+                    saveUserToSupabase(currentUser.id, username, email)
+                } else {
+                    withContext(Dispatchers.Main) {
+                        showSnackbar("Error al registrar usuario: ID nulo")
                         showLoading(false)
-                        showSnackbar("Error: ${task.exception?.message}")
                     }
                 }
-        }
-    }
 
-    private fun saveUserToFirestore(username: String, email: String) {
-        val user = auth.currentUser
-        user?.let {
-            val userData = hashMapOf(
-                "userId" to user.uid,
-                "username" to username,
-                "email" to email,
-                "createdAt" to FieldValue.serverTimestamp()
-            )
-
-            db.collection("users")
-                .document(user.uid)
-                .set(userData)
-                .addOnSuccessListener {
-                    Log.d("RegisterFragment", "Usuario guardado en Firestore")
-                    navigateToHome()
-                }
-                .addOnFailureListener { e ->
-                    Log.e("RegisterFragment", "Error al guardar usuario", e)
-                    showSnackbar("Error al crear cuenta: ${e.message}")
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    showSnackbar("Error: ${e.message}")
                     showLoading(false)
                 }
-        } ?: run {
-            showSnackbar("Error: Usuario no autenticado")
-            showLoading(false)
+            }
         }
     }
 
+    private suspend fun saveUserToSupabase(userId: String, username: String, email: String) {
+        try {
+            // Usa la clase Profile directamente
+            val profile = Profile(
+                id = userId,
+                username = username,
+                email = email,
+                created_at = Clock.System.now().toString()
+            )
+
+            supabase.from("profiles").insert(profile)
+
+            withContext(Dispatchers.Main) {
+                navigateToHome()
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                Log.e("RegisterFragment", "Error al guardar usuario", e)
+                showSnackbar("Error al crear cuenta: ${e.message}")
+                showLoading(false)
+            }
+        }
+    }
     private fun validateInput(
         username: String,
         email: String,

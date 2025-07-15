@@ -7,19 +7,26 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.proyectorecetas.databinding.FragmentCreatedRecipesBinding
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
+import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.postgrest.query.Order
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CreatedRecipesFragment : Fragment() {
 
     private var _binding: FragmentCreatedRecipesBinding? = null
     private val binding get() = _binding!!
     private lateinit var rvAdapter: RecipeAdapter
-    private val db = FirebaseFirestore.getInstance()
-    private val auth = FirebaseAuth.getInstance()
+
+    private val supabase: SupabaseClient
+        get() = SupabaseManager.client
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,53 +39,62 @@ class CreatedRecipesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
-        loadRecipesFromFirestore()
+        loadRecipesFromSupabase()
     }
 
     private fun setupRecyclerView() {
         rvAdapter = RecipeAdapter(emptyList()) { recipe ->
             navigateToRecipeDetail(recipe)
         }
-        binding.rvCreatedRecipes.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvCreatedRecipes.layoutManager = GridLayoutManager(requireContext(), 2)
+
         binding.rvCreatedRecipes.adapter = rvAdapter
     }
 
     private fun navigateToRecipeDetail(recipe: Recipe) {
         val args = Bundle().apply {
             putString("id", recipe.id)
-            putString("img", recipe.imageUrl)
+            putString("img", recipe.image_path)
             putString("tittle", recipe.title)
             putString("des", recipe.description)
             putString("ing", recipe.ingredients)
             putString("time", recipe.time)
             putString("difficulty", recipe.difficulty)
-            putString("userId", recipe.userId)
+            putString("userId", recipe.user_id)
         }
         findNavController().navigate(R.id.action_createdRecipesFragment_to_recipeFragment, args)
     }
 
-    private fun loadRecipesFromFirestore() {
-        val userId = auth.currentUser?.uid ?: return
+    private fun loadRecipesFromSupabase() {
+        val userId = supabase.auth.currentUserOrNull()?.id
 
-        db.collection("recipes")
-            .whereEqualTo("userId", userId)
-            .orderBy("timestamp", Query.Direction.DESCENDING)
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    showError("Error al cargar recetas: ${error.message}")
-                    return@addSnapshotListener
+        if (userId == null) {
+            showError("Usuario no autenticado")
+            return
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val result = supabase
+                    .from("recipes")
+                    .select {
+                        filter {
+                            eq("user_id", userId)
+                        }
+                        order("created_at", Order.DESCENDING)
+                    }
+                    .decodeList<Recipe>()
+
+                withContext(Dispatchers.Main) {
+                    rvAdapter.updateData(result)
                 }
 
-                val recipes = snapshot?.documents?.mapNotNull { doc ->
-                    try {
-                        doc.toObject(Recipe::class.java)?.copy(id = doc.id)
-                    } catch (e: Exception) {
-                        null
-                    }
-                } ?: emptyList()
-
-                rvAdapter.updateData(recipes)
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    showError("Error al cargar recetas: ${e.message}")
+                }
             }
+        }
     }
 
     private fun showError(message: String) {

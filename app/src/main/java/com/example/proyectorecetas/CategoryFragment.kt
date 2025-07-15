@@ -2,14 +2,18 @@ package com.example.proyectorecetas
 
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Room
 import com.example.proyectorecetas.databinding.FragmentCategoriaBinding
-import com.google.firebase.firestore.FirebaseFirestore
+import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CategoryFragment : Fragment() {
 
@@ -54,20 +58,30 @@ class CategoryFragment : Fragment() {
     }
 
     private fun loadRecipesByCategory(category: String) {
-        val db = FirebaseFirestore.getInstance()
-        db.collection("recipes")
-            .whereEqualTo("category", category)
-            .whereEqualTo("isPublic", true) // Solo recetas públicas
-            .get()
-            .addOnSuccessListener { snapshot ->
-                val recipes = snapshot.documents.mapNotNull {
-                    it.toObject(Recipe::class.java)?.copy(id = it.id)
+        // Ejemplo para usar supabase con coroutines (asegúrate de estar en un contexto coroutine)
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val recipes = SupabaseManager.client.postgrest["recipes"]
+                    .select {
+                        filter {
+                            eq("category", category)
+                            eq("is_public", true)
+                        }
+                    }
+                    .decodeList<Recipe>()
+
+                withContext(Dispatchers.Main) {
+                    dataList.clear()
+                    dataList.addAll(recipes)
+                    rvAdapter.notifyDataSetChanged()
                 }
-                dataList.clear()
-                dataList.addAll(recipes)
-                rvAdapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.e("CategoryFragment", "Error loading recipes", e)
+                // Mostrar mensaje o estado error si quieres
             }
+        }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

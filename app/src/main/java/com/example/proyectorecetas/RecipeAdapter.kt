@@ -14,10 +14,10 @@ class RecipeAdapter(
     inner class RecipeViewHolder(private val binding: RecetasPopularBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(recipe: Recipe) {
             binding.popularTxt.text = recipe.title
-            binding.popularTime.text = "⏱ ${recipe.time} | ${recipe.category}"
+            binding.popularTime.text = recipe.time
 
             Glide.with(binding.popularImg.context)
-                .load(recipe.imageUrl)
+                .load(recipe.image_path)
                 .into(binding.popularImg)
 
             binding.root.setOnClickListener { onItemClick(recipe) }

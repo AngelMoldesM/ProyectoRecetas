@@ -46,10 +46,10 @@ class SearchAdapter(
         fun bind(recipe: Recipe) {
             with(binding) {
                 popularTxt.text = recipe.title
-                popularTime.text = "⏱ ${recipe.time} | ${recipe.category}"
+                popularTime.text = recipe.time
 
                 Glide.with(root.context)
-                    .load(recipe.imageUrl)
+                    .load(recipe.image_path)
                     .into(popularImg)
 
                 root.setOnClickListener { onItemClick(recipe) }

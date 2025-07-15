@@ -1,27 +1,32 @@
 package com.example.proyectorecetas
 
 import android.os.Bundle
+import android.util.Log
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import com.example.proyectorecetas.databinding.ActivityMainBinding
-import com.google.firebase.auth.FirebaseAuth
+import io.github.jan.supabase.auth.auth
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private val auth by lazy { FirebaseAuth.getInstance() }
     private var shouldUpdateBottomNav = true
-    private lateinit var sharedViewModel: SharedViewModel
+    private val SharedViewModel: SharedViewModel by viewModels()
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         applyAccessibilitySettings()
@@ -29,25 +34,27 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Configurar Toolbar
-        //setSupportActionBar(binding.toolbar)
-
-        // Inicializar ViewModel compartido
-        sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
-
         setupNavigation()
+        SharedViewModel.drawerState.onEach { isOpen ->
+            if (isOpen) {
+                binding.drawerLayout.openDrawer(GravityCompat.START)
+            } else {
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
+            }
+        }.launchIn(lifecycleScope)
 
-        // Observar eventos del drawer
-        sharedViewModel.toggleDrawerEvent.observe(this) {
-            toggleDrawer()
-        }
+
+        // Comprobar si hay usuario activo al iniciar
+        checkUserSession()
     }
 
-    private fun toggleDrawer() {
-        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            binding.drawerLayout.closeDrawer(GravityCompat.START)
-        } else {
-            binding.drawerLayout.openDrawer(GravityCompat.START)
+    private fun checkUserSession() {
+        lifecycleScope.launch {
+            val user = SupabaseManager.client.auth.currentUserOrNull()
+            if (user == null) {
+                // No hay usuario logueado, navegar a login
+                navController.navigate(R.id.loginFragment)
+            }
         }
     }
 
@@ -56,33 +63,22 @@ class MainActivity : AppCompatActivity() {
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        // Configurar AppBarConfiguration
         appBarConfiguration = AppBarConfiguration(
             setOf(R.id.homeFragment, R.id.searchFragment, R.id.createdRecipesFragment),
             binding.drawerLayout
         )
 
-        // Configurar ActionBar con NavController
-        //setupActionBarWithNavController(navController, appBarConfiguration)
-
-        // Configurar NavigationView
         binding.navView.setupWithNavController(navController)
-
-        // Configurar BottomNavigationView
         setupBottomNavigation()
-
-        // Manejar ítems especiales del drawer
         setupDrawerMenu()
     }
 
     private fun setupBottomNavigation() {
-        // Configurar listener para BottomNavigation
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             if (!shouldUpdateBottomNav) {
                 shouldUpdateBottomNav = true
                 return@setOnItemSelectedListener false
             }
-
             when (item.itemId) {
                 R.id.homeFragment -> {
                     navController.navigate(R.id.homeFragment)
@@ -100,10 +96,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Actualizar selección cuando cambia el destino
         navController.addOnDestinationChangedListener { _, destination, _ ->
             shouldUpdateBottomNav = false
-
             when (destination.id) {
                 R.id.homeFragment -> binding.bottomNavigation.selectedItemId = R.id.homeFragment
                 R.id.createRecipeFragment -> binding.bottomNavigation.selectedItemId = R.id.createRecipeFragment
@@ -119,7 +113,6 @@ class MainActivity : AppCompatActivity() {
                 binding.drawerLayout.closeDrawer(GravityCompat.START)
                 true
             }
-
             findItem(R.id.nav_logout).setOnMenuItemClickListener {
                 logoutUser()
                 true
@@ -144,9 +137,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun applyAccessibilitySettings() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-
-        // Aplicar tamaño de texto
-        val textSizeStyle = when(prefs.getString("font_size", "medium")) {
+        val textSizeStyle = when (prefs.getString("font_size", "medium")) {
             "small" -> R.style.FontSizeSmall
             "large" -> R.style.FontSizeLarge
             "xlarge" -> R.style.FontSizeXLarge
@@ -154,24 +145,28 @@ class MainActivity : AppCompatActivity() {
         }
         setTheme(textSizeStyle)
 
-        // Aplicar alto contraste si está activado
         if (prefs.getBoolean("high_contrast", false)) {
             setTheme(R.style.HighContrastTheme)
         }
     }
 
-
     private fun logoutUser() {
-        auth.signOut()
-        navController.navigate(R.id.loginFragment)
-        binding.drawerLayout.closeDrawer(GravityCompat.START)
+        lifecycleScope.launch {
+            try {
+                SupabaseManager.client.auth.signOut()
+                navController.navigate(R.id.loginFragment)
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error al cerrar sesión", e)
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
+    @Deprecated("Use OnBackPressedDispatcher instead")
     override fun onBackPressed() {
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             binding.drawerLayout.closeDrawer(GravityCompat.START)

@@ -11,8 +11,12 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.proyectorecetas.databinding.FragmentRecetaBinding
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.postgrest.from
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RecipeFragment : Fragment() {
 
@@ -30,8 +34,7 @@ class RecipeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recipeId = arguments?.getString("id") ?: ""
-        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+        val currentUserId = SupabaseManager.client.auth.currentUserOrNull()?.id ?: ""
         val recipeUserId = arguments?.getString("userId") ?: ""
         binding.difficulty.text = "Dificultad: ${arguments?.getString("difficulty") ?: "Media"}"
 
@@ -51,18 +54,6 @@ class RecipeFragment : Fragment() {
             )
         }
 
-       /* if (currentUserId == recipeUserId) {
-            binding.editButton.visibility = View.VISIBLE
-        } else {
-            binding.editButton.visibility = View.GONE
-        }
-
-        binding.editButton.setOnClickListener {
-            val recipeId = arguments?.getString("id") ?: ""
-            navigateToEditRecipe(recipeId)
-        }*/
-
-
 
         // Configurar UI
         Glide.with(requireContext())
@@ -70,7 +61,7 @@ class RecipeFragment : Fragment() {
             .into(binding.itemImg)
 
         binding.tittle.text = args?.get("title").toString()
-        binding.time.text = "⏱ ${args?.get("time")}"
+        binding.time.text = "${args?.get("time")}"
         binding.stepData.text = args?.get("description").toString()
 
         // Formatear ingredientes
@@ -136,18 +127,30 @@ class RecipeFragment : Fragment() {
 
     private fun deleteRecipe() {
         val recipeId = arguments?.getString("id") ?: return
-        val db = FirebaseFirestore.getInstance()
 
-        db.collection("recipes").document(recipeId)
-            .delete()
-            .addOnSuccessListener {
-                Toast.makeText(requireContext(), "Receta borrada", Toast.LENGTH_SHORT).show()
-                findNavController().popBackStack() // Volver a la pantalla anterior
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                SupabaseManager.client
+                    .from("recipes")
+                    .delete {
+                        filter {
+                            eq("id", recipeId)
+                        }
+                    }
+
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(requireContext(), "Receta borrada", Toast.LENGTH_SHORT).show()
+                    findNavController().popBackStack()
+                }
+
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(requireContext(), "Error al borrar: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
             }
-            .addOnFailureListener { e ->
-                Toast.makeText(requireContext(), "Error al borrar: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+        }
     }
+
 
     private fun shareRecipe() {
         val title = arguments?.getString("tittle") ?: "Receta"

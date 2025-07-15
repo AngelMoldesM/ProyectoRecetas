@@ -1,25 +1,27 @@
 package com.example.proyectorecetas
 
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.proyectorecetas.databinding.FragmentHomeBinding
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.postgrest.query.Order
+import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var recipeAdapter: RecipeAdapter
-    private val db = FirebaseFirestore.getInstance()
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -33,7 +35,6 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Configurar el clic del botón del drawer
         binding.imageView.setOnClickListener {
             sharedViewModel.toggleDrawer()
         }
@@ -50,7 +51,6 @@ class HomeFragment : Fragment() {
             navigateToSearchFragment("")
         }
 
-        // Permitir escribir en el campo de búsqueda
         binding.search.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 val query = binding.search.text.toString().trim()
@@ -61,7 +61,6 @@ class HomeFragment : Fragment() {
             }
         }
 
-        // Icono de búsqueda
         binding.imageView3.setOnClickListener {
             val query = binding.search.text.toString().trim()
             navigateToSearchFragment(query)
@@ -75,22 +74,31 @@ class HomeFragment : Fragment() {
         findNavController().navigate(R.id.action_homeFragment_to_searchFragment, bundle)
     }
 
-
     private fun loadUserName() {
-        val user = FirebaseAuth.getInstance().currentUser
-        user?.let {
-            db.collection("users").document(user.uid).get()
-                .addOnSuccessListener { document ->
-                    val username = when {
-                        document.exists() -> document.getString("username") ?: "Chef"
-                        else -> "Chef"
+        val user = SupabaseManager.client.auth.currentUserOrNull()
+        if (user != null) {
+            viewLifecycleOwner.lifecycleScope.launch() {
+                try {
+                    val profile = SupabaseManager.client.postgrest["profiles"]
+                        .select {
+                            filter { eq("id", user.id) }
+                            limit(1)
+                        }
+                        .decodeSingleOrNull<Profile>()
+
+                    if (_binding != null) {
+                        profile?.username?.let {
+                            binding.textView2.text = getString(R.string.hello_user, it)
+                        } ?: run {
+                            binding.textView2.text = getString(R.string.hello_chef)
+                        }
                     }
-                    binding.textView2.text = getString(R.string.hello_user, username)
-                }
-                .addOnFailureListener {
+                } catch (e: Exception) {
+                    Log.e("HomeFragment", "Error loading profile", e)
                     binding.textView2.text = getString(R.string.hello_chef)
                 }
-        } ?: run {
+            }
+        } else {
             binding.textView2.text = getString(R.string.hello_chef)
         }
     }
@@ -99,13 +107,13 @@ class HomeFragment : Fragment() {
         recipeAdapter = RecipeAdapter(emptyList()) { recipe ->
             val args = Bundle().apply {
                 putString("id", recipe.id)
-                putString("img", recipe.imageUrl)
+                putString("img", recipe.image_path)
                 putString("tittle", recipe.title)
                 putString("des", recipe.description)
                 putString("ing", recipe.ingredients)
                 putString("time", recipe.time)
                 putString("difficulty", recipe.difficulty)
-                putString("userId", recipe.userId)
+                putString("userId", recipe.user_id)
             }
             findNavController().navigate(R.id.action_homeFragment_to_recipeFragment, args)
         }
@@ -121,22 +129,21 @@ class HomeFragment : Fragment() {
     }
 
     private fun loadPopularRecipes() {
-        db.collection("recipes")
-            .whereEqualTo("isPublic", true)
-            .orderBy("timestamp", Query.Direction.DESCENDING)
-            .limit(5)
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    // Manejar error
-                    return@addSnapshotListener
-                }
-
-                val recipes = snapshot?.documents?.mapNotNull { doc ->
-                    doc.toObject(Recipe::class.java)?.copy(id = doc.id)
-                } ?: emptyList()
+        lifecycleScope.launch {
+            try {
+                val recipes = SupabaseManager.client.postgrest["recipes"]
+                    .select {
+                        filter{ eq("is_public", true) }
+                        order("created_at", Order.DESCENDING)
+                        limit(5)
+                    }
+                    .decodeList<Recipe>()
 
                 recipeAdapter.updateData(recipes)
+            } catch (e: Exception) {
+                Log.e("HomeFragment", "Error loading recipes", e)
             }
+        }
     }
 
     private fun setupCategoryButtons() {

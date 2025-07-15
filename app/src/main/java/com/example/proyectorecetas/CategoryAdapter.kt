@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.proyectorecetas.databinding.CategoriaBinding
@@ -24,19 +23,19 @@ class CategoryAdapter(
         val recipe = dataList[position]
 
         // CORRECCIÓN: Usar propiedades correctas del modelo Recipe
-        Glide.with(context).load(recipe.imageUrl).into(holder.binding.img)
+        Glide.with(context).load(recipe.image_path).into(holder.binding.img)
         holder.binding.tittle.text = recipe.title
-        holder.binding.time.text = "⏱ ${recipe.time}"
+        holder.binding.time.text = "${recipe.time}"
 
         holder.binding.next.setOnClickListener {
             val bundle = Bundle().apply {
                 putString("id", recipe.id)
-                putString("img", recipe.imageUrl)
+                putString("img", recipe.image_path)
                 putString("tittle", recipe.title)
                 putString("des", recipe.description)
                 putString("ing", recipe.ingredients)
                 putString("time", recipe.time)
-                putString("userId", recipe.userId)
+                putString("userId", recipe.user_id)
             }
 
             // Navegación mejorada

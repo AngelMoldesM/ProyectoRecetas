@@ -1,12 +1,18 @@
 package com.example.proyectorecetas
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class SharedViewModel : ViewModel() {
-    val toggleDrawerEvent = MutableLiveData<Unit>()
+    private val _drawerState = MutableStateFlow(false)
+    val drawerState = _drawerState.asStateFlow()
 
     fun toggleDrawer() {
-        toggleDrawerEvent.value = Unit
+        _drawerState.value = !_drawerState.value
+    }
+
+    fun closeDrawer() {
+        _drawerState.value = false
     }
 }
