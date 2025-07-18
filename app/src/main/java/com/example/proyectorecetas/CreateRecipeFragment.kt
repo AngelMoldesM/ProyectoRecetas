@@ -42,10 +42,10 @@ class CreateRecipeFragment : Fragment() {
         isEditMode = recipeId != null
 
         if (isEditMode) {
-            binding.btnSaveRecipe.text = "Actualizar Receta"
+            binding.btnSaveRecipe.text = getString(R.string.update_recipe)
             loadRecipeData()
         } else {
-            binding.btnSaveRecipe.text = "Guardar Receta"
+            binding.btnSaveRecipe.text = getString(R.string.save_recipe)
             binding.switchPublic.isChecked = true
             loadDefaultImage()
         }
@@ -69,7 +69,7 @@ class CreateRecipeFragment : Fragment() {
 
             val userId = SupabaseManager.client.auth.currentUserOrNull()?.id
             if (userId == null) {
-                Toast.makeText(requireContext(), "Usuario no autenticado", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "User not authenticated", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -110,7 +110,7 @@ class CreateRecipeFragment : Fragment() {
                     }
                 }
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Error al cargar: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Error loading recipe: ${e.message}", Toast.LENGTH_SHORT).show()
                 findNavController().popBackStack()
             }
         }
@@ -133,10 +133,10 @@ class CreateRecipeFragment : Fragment() {
                 )
 
                 SupabaseManager.client.postgrest["recipes"].insert(recipe)
-                Toast.makeText(requireContext(), "Receta creada", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Recipe created", Toast.LENGTH_SHORT).show()
                 findNavController().popBackStack()
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Error al crear receta: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Error creating recipe: ${e.message}", Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -160,10 +160,10 @@ class CreateRecipeFragment : Fragment() {
                         eq("user_id", userId)
                     }
                 }
-                Toast.makeText(requireContext(), "Receta actualizada", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Recipe updated", Toast.LENGTH_SHORT).show()
                 findNavController().popBackStack()
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Error al actualizar: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Error updating recipe: ${e.message}", Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -189,19 +189,19 @@ class CreateRecipeFragment : Fragment() {
     private fun validateInput(): Boolean {
         var isValid = true
         if (binding.etTitle.text.isNullOrEmpty()) {
-            binding.etTitle.error = "Ingresa un título"
+            binding.etTitle.error = "Enter a title"
             isValid = false
         }
         if (binding.etDescription.text.isNullOrEmpty()) {
-            binding.etDescription.error = "Ingresa la descripción"
+            binding.etDescription.error = "Enter a description"
             isValid = false
         }
         if (binding.etIngredients.text.isNullOrEmpty()) {
-            binding.etIngredients.error = "Ingresa los ingredientes"
+            binding.etIngredients.error = "Enter ingredients"
             isValid = false
         }
         if (binding.etTime.text.isNullOrEmpty()) {
-            binding.etTime.error = "Ingresa el tiempo"
+            binding.etTime.error = "Enter time"
             isValid = false
         }
         return isValid

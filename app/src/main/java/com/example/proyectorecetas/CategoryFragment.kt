@@ -36,7 +36,8 @@ class CategoryFragment : Fragment() {
 
         // Configurar el título
         val title = arguments?.getString("TITTLE")
-        binding.tittle.text = title ?: "Sin título"
+        binding.tittle.text = title ?: "Without title"
+
 
         setupRecyclerView()
 
@@ -81,6 +82,8 @@ class CategoryFragment : Fragment() {
             }
         }
     }
+
+
 
 
     override fun onDestroyView() {

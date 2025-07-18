@@ -7,20 +7,19 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.proyectorecetas.databinding.RecetasPopularBinding
+import com.example.proyectorecetas.databinding.CategoriaBinding
 
 class SearchAdapter(
     private val onItemClick: (Recipe) -> Unit,
     private val onLoadMore: () -> Unit
 ) : ListAdapter<Recipe, RecyclerView.ViewHolder>(RecipeDiffCallback) {
 
-    // 1. Eliminar la variable de control del ítem de carga
-    // 2. Simplificar getItemCount()
+
     override fun getItemCount() = super.getItemCount()
 
-    // 3. Eliminar la lógica de tipos de vista
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = RecipeViewHolder(
-        RecetasPopularBinding.inflate(
+        CategoriaBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -39,18 +38,21 @@ class SearchAdapter(
     }
 
     inner class RecipeViewHolder(
-        private val binding: RecetasPopularBinding,
+        private val binding: CategoriaBinding,
         private val onItemClick: (Recipe) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(recipe: Recipe) {
             with(binding) {
-                popularTxt.text = recipe.title
-                popularTime.text = recipe.time
+                tittle.text = recipe.title
+                time.text = recipe.time
+
+                ratingBar.rating = recipe.average_rating
+                tvRatingCount.text = "(${recipe.rating_count})"
 
                 Glide.with(root.context)
                     .load(recipe.image_path)
-                    .into(popularImg)
+                    .into(img)
 
                 root.setOnClickListener { onItemClick(recipe) }
             }

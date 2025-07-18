@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginStart="22dp"
     android:orientation="horizontal">
 
@@ -19,6 +18,28 @@
             android:foreground="?android:attr/selectableItemBackground"
             android:scaleType="centerCrop"
             android:src="@drawable/macarrones" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:rating="0"
+            android:stepSize="1"
+            android:layout_marginTop="3dp"
+            android:layout_marginStart="40dp"
+            android:isIndicator="true"/>
+        <TextView
+            android:id="@+id/tvRatingCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="(0)"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@id/ratingBar"
+            app:layout_constraintBaseline_toBaselineOf="@id/ratingBar"
+            android:layout_marginTop="3dp"
+            android:layout_marginStart="125dp"/>
 
         <ImageView
             android:id="@+id/img_gradient"
@@ -40,15 +61,27 @@
             android:textColor="@color/white"
             android:textSize="16sp" />
 
+        <ImageView
+            android:id="@+id/clock"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_below="@id/tittle"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="142dp"
+            android:src="@drawable/clock_icon"
+            app:tint="#019267" />
+
         <TextView
             android:id="@+id/popular_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginStart="15dp"
+            android:layout_marginStart="33dp"
             android:layout_marginBottom="7dp"
             android:fontFamily="@font/poppins"
             android:maxLength="10"
+
             android:text="@string/_30_minutos"
             android:textColor="@color/white"
             android:textSize="11sp" />

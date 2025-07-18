@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.proyectorecetas.databinding.FragmentCreatedRecipesBinding
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.SupabaseClient
@@ -69,7 +68,7 @@ class CreatedRecipesFragment : Fragment() {
         val userId = supabase.auth.currentUserOrNull()?.id
 
         if (userId == null) {
-            showError("Usuario no autenticado")
+            showError("User not authenticated")
             return
         }
 
@@ -91,7 +90,7 @@ class CreatedRecipesFragment : Fragment() {
 
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    showError("Error al cargar recetas: ${e.message}")
+                    showError("Error loading recipes: ${e.message}")
                 }
             }
         }

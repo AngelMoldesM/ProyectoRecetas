@@ -109,15 +109,15 @@ class LoginFragment : Fragment() {
     private fun validateInput(email: String, password: String): Boolean {
         return when {
             email.isEmpty() -> {
-                showSnackbar("Ingresa tu email")
+                showSnackbar("Enter your email")
                 false
             }
             password.isEmpty() -> {
-                showSnackbar("Ingresa tu contraseña")
+                showSnackbar("Enter your password")
                 false
             }
             password.length < 6 -> {
-                showSnackbar("La contraseña debe tener al menos 6 caracteres")
+                showSnackbar("The password must be at least 6 characters long")
                 false
             }
             else -> true

@@ -124,6 +124,8 @@ class HomeFragment : Fragment() {
                 LinearLayoutManager.HORIZONTAL,
                 false
             )
+            setHasFixedSize(true)  // Mejora el rendimiento
+            isNestedScrollingEnabled = false  // Importante para scroll suave
             adapter = recipeAdapter
         }
     }

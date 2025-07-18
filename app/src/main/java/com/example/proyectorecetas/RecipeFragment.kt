@@ -6,13 +6,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.proyectorecetas.databinding.FragmentRecetaBinding
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,6 +25,10 @@ class RecipeFragment : Fragment() {
 
     private var _binding: FragmentRecetaBinding? = null
     private val binding get() = _binding!!
+    private val ratingRepository = RatingRepository()
+    private val favoriteRepository = FavoriteRepository()
+    private lateinit var btnFavorite: ImageButton
+    private var isFavorite = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +44,15 @@ class RecipeFragment : Fragment() {
         val currentUserId = SupabaseManager.client.auth.currentUserOrNull()?.id ?: ""
         val recipeUserId = arguments?.getString("userId") ?: ""
         binding.difficulty.text = "Dificultad: ${arguments?.getString("difficulty") ?: "Media"}"
+        btnFavorite = binding.btnFavorite
+        val recipeId = arguments?.getString("id") ?: ""
+
+        if (recipeId.isBlank()) {
+            //Toast.makeText(context, "Receta inválida", Toast.LENGTH_SHORT).show()
+            findNavController().popBackStack()
+            return
+        }
+
 
         binding.fabOptions.visibility = if (currentUserId == recipeUserId) View.VISIBLE else View.GONE
 
@@ -87,7 +103,33 @@ class RecipeFragment : Fragment() {
         binding.backBtn.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
+
+        lifecycleScope.launch {
+            isFavorite = currentUserId.isNotEmpty() && favoriteRepository.isFavorite(currentUserId, recipeId)
+            updateFavoriteIcon()
+        }
+
+        btnFavorite.setOnClickListener {
+            if (currentUserId.isEmpty()) {
+                Toast.makeText(context, "Debes iniciar sesión para guardar favoritos", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            lifecycleScope.launch {
+                if (isFavorite) {
+                    favoriteRepository.removeFavorite(currentUserId, recipeId)
+                } else {
+                    favoriteRepository.addFavorite(currentUserId, recipeId)
+                }
+                isFavorite = !isFavorite
+                updateFavoriteIcon()
+            }
+        }
+
+        setupRatingBar()
+        loadRating()
     }
+
 
     private fun setupOptionsMenu() {
         var isMenuVisible = false
@@ -111,6 +153,48 @@ class RecipeFragment : Fragment() {
         binding.btnShare.setOnClickListener {
             shareRecipe()
             binding.optionsMenu.visibility = View.GONE
+        }
+    }
+
+    private fun loadRating() {
+        val recipeId = arguments?.getString("id") ?: return
+        val userId = SupabaseManager.client.auth.currentUserOrNull()?.id
+
+        lifecycleScope.launch {
+            // Obtener valoración del usuario actual
+            val userRating = userId?.let { ratingRepository.getUserRating(recipeId, it) } ?: 0
+            binding.ratingBar.rating = userRating.toFloat()
+
+            // Obtener promedio general
+            val recipe = SupabaseManager.client.postgrest["recipes"].select {
+                filter { eq("id", recipeId) }
+
+            }.decodeSingle<Recipe>()
+            binding.tvAverageRating.text = "%.1f".format(recipe.average_rating)
+            binding.tvRatingCount.text = "(${recipe.rating_count})"
+        }
+    }
+
+    private fun setupRatingBar() {
+        binding.ratingBar.setOnRatingBarChangeListener { ratingBar, rating, fromUser ->
+            if (fromUser) {
+                val recipeId = arguments?.getString("id") ?: return@setOnRatingBarChangeListener
+                val userId = SupabaseManager.client.auth.currentUserOrNull()?.id ?: return@setOnRatingBarChangeListener
+
+                lifecycleScope.launch {
+                    ratingRepository.submitRating(recipeId, userId, rating.toInt())
+                    // Actualizar UI
+                    loadRating()
+                }
+            }
+        }
+    }
+
+    private fun updateFavoriteIcon() {
+        if (isFavorite) {
+            btnFavorite.setImageResource(R.drawable.ic_favorite_filled)
+        } else {
+            btnFavorite.setImageResource(R.drawable.ic_favorite_border)
         }
     }
 

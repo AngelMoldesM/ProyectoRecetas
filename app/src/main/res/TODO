@@ -4,20 +4,20 @@
  Aumentar categorias de comidas (con un selector de categorias que los usuarios son impredecibles)
  (Hecho)Menu lateral con ajustes de usuario
  (Hecho)Barra de busqueda para recetas(implementar filtros mas adelante)
- Ajustar los parametros de busqueda para Firebase (paginacion)
  (Hecho)Nombre de usuario
  Mejorar interfaces de usuario
  (Hecho)En el home fragment añadir el nombre de usuario "Hola, {username}"
  (Hecho?) Arreglar bottombar
- Refactorizar todos los strings(jeje)
- Sistema de valoracion de recetas
+ (Hecho)Refactorizar todos los strings(jeje)
+ (Hecho)Sistema de valoracion de recetas
  (Hecho)Añadir complejidad recetas
  Modo cocina
  Subir imagen de la receta
- Accesibilidad (tamaño letra, daltonismo...)
+ (Hecho)Accesibilidad (tamaño letra, daltonismo...)
  Añadir nombre del usuario creador de la receta
- Marcar favoritos
+ (Hecho)Marcar favoritos
  Pantalla de carga personalizada
- Icono de aplicacion
+ (Hecho)Icono de aplicacion
  Optimizar y refactorizar absolutamente todo
  Implementar autenticacion de Google
+ Fragmentos responsive

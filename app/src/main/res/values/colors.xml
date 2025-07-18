@@ -14,4 +14,5 @@
     <color name="tritanopia_primary">#FFD2691E</color> <!-- Chocolate -->
     <color name="dark_orange">#FF8000</color>
     <color name="light_gray">#FFCCCCCC</color>
+    <color name="red">#FFFF0000</color>
 </resources>

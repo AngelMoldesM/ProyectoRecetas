@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide
 import com.example.proyectorecetas.databinding.CategoriaBinding
 
 class CategoryAdapter(
-    var dataList: List<Recipe>,  // Cambiado a List<Recipe>
+    var dataList: List<Recipe>,
     var context: Context
 ) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
 
@@ -26,6 +26,10 @@ class CategoryAdapter(
         Glide.with(context).load(recipe.image_path).into(holder.binding.img)
         holder.binding.tittle.text = recipe.title
         holder.binding.time.text = "${recipe.time}"
+
+        holder.binding.ratingBar.rating = recipe.average_rating
+        holder.binding.tvRatingCount.text = "(${recipe.rating_count})"
+
 
         holder.binding.next.setOnClickListener {
             val bundle = Bundle().apply {

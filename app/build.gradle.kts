@@ -50,25 +50,19 @@ android {
     }
 
 }
-val ktorVersion = "3.0.0"
+
 dependencies {
-    //implementation("androidx.multidex:multidex:2.0.1")
-    //implementation(platform("io.ktor:ktor-bom:$ktorVersion"))
-    //implementation("io.ktor:ktor-client-core")
     implementation("io.ktor:ktor-client-okhttp:3.0.0")
-    //implementation("io.ktor:ktor-client-content-negotiation")
-    //implementation("io.ktor:ktor-serialization-kotlinx-json")
-    //implementation("io.ktor:ktor-client-logging")
-    //implementation("io.ktor:ktor-client-http-timeout")
-    //implementation("io.ktor:ktor-client-resources")
 
 
+    implementation ("androidx.core:core-splashscreen:1.0.1")
     // Dependencias de Supabase (usa BOM para control de versiones)
     implementation(platform("io.github.jan-tennert.supabase:bom:3.1.0"))
     implementation("io.github.jan-tennert.supabase:supabase-kt")
     implementation("io.github.jan-tennert.supabase:auth-kt")
     implementation("io.github.jan-tennert.supabase:postgrest-kt")
     implementation("io.github.jan-tennert.supabase:realtime-kt")
+
 
     // Serialización
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")

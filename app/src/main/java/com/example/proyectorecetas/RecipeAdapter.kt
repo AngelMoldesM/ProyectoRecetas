@@ -16,6 +16,9 @@ class RecipeAdapter(
             binding.popularTxt.text = recipe.title
             binding.popularTime.text = recipe.time
 
+            binding.ratingBar.rating = recipe.average_rating
+            binding.tvRatingCount.text = "(${recipe.rating_count})"
+
             Glide.with(binding.popularImg.context)
                 .load(recipe.image_path)
                 .into(binding.popularImg)

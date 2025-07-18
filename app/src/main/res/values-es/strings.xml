@@ -28,4 +28,51 @@
     <string name="ingredients">Ingredientes</string>
     <string name="steps">Pasos</string>
     <string name="tiempo_necesario">Tiempo necesario</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">Mensajes</string>
+    <string name="sync_header">Sincronización</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Tu firma</string>
+    <string name="reply_title">Acción de respuesta predeterminada</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sincronizar correo periódicamente</string>
+    <string name="attachment_title">Descargar archivos adjuntos entrantes</string>
+    <string name="attachment_summary_on">Descargar automáticamente los archivos adjuntos de los correos entrantes</string>
+    <string name="attachment_summary_off">Descargar archivos adjuntos solo cuando se solicite manualmente</string>
+
+    <string name="settings">Ajustes</string>
+    <string name="value">Valor</string>
+    <string name="delete">Eliminar</string>
+    <string name="share">Compartir</string>
+    <string name="modify">Modificar</string>
+    <string name="options">Opciones</string>
+    <string name="search_recipes">Buscar recetas...</string>
+    <string name="no_recipes_found">No se encontraron recetas</string>
+    <string name="filters">Filtros</string>
+    <string name="create_account">Crear cuenta</string>
+    <string name="username">Nombre de usuario</string>
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="confirm_password">Confirmar contraseña</string>
+    <string name="sign_up">Registrarse</string>
+    <string name="already_have_an_account_login">¿Ya tienes una cuenta? Inicia sesión</string>
+    <string name="difficulty_medium">Dificultad: Media</string>
+    <string name="login">Iniciar sesión</string>
+    <string name="public_recipe">Receta pública</string>
+    <string name="difficulty">Dificultad</string>
+    <string name="clean">Limpiar</string>
+    <string name="apply">Aplicar</string>
+    <string name="filter_by_category">Filtrar por categoría</string>
+    <string name="home">Inicio</string>
+    <string name="search">Buscar</string>
+    <string name="favourites">Favoritos</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="hello_user">Hola, %1$s</string>
+    <string name="hello_chef">Hola, Chef</string>
+    <string name="your_favorites">Tus favoritos</string>
+    <string name="update_recipe">Actualizar receta</string>
+    <string name="save_recipe">Guardar receta</string>
+
 </resources>
